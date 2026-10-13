@@ -4,6 +4,9 @@
  */
 package groomify.view;
 
+import javax.swing.ImageIcon;
+
+
 /**
  *
  * @author Chirath
@@ -16,7 +19,11 @@ public class FrameDashboard extends javax.swing.JFrame {
      * Creates new form FrameDashboard
      */
     public FrameDashboard() {
+        
         initComponents();
+        
+        setIconImage(new ImageIcon(getClass().getResource("/groomify/util/img/logo_badge_36.png")).getImage());
+        
     }
 
     /**
@@ -28,34 +35,94 @@ public class FrameDashboard extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        btnGroupSlideBar = new javax.swing.ButtonGroup();
+        pnlSideBar = new javax.swing.JPanel();
+        lblBrandName = new javax.swing.JLabel();
+        lblIcon = new javax.swing.JLabel();
+        btnDashboard = new groomify.view.RoundedToggleButton();
+        btnAppointment = new groomify.view.RoundedToggleButton();
+        btnOwner = new groomify.view.RoundedToggleButton();
+        btnPet = new groomify.view.RoundedToggleButton();
+        btnService = new groomify.view.RoundedToggleButton();
+        btnBilling = new groomify.view.RoundedToggleButton();
+        btnReport = new groomify.view.RoundedToggleButton();
+        btnLogout = new groomify.view.RoundedToggleButton();
+        pnlContent = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Groomify");
         setBackground(new java.awt.Color(204, 204, 255));
+        setResizable(false);
 
-        jPanel1.setBackground(new java.awt.Color(204, 255, 204));
+        pnlSideBar.setBackground(new java.awt.Color(62, 39, 35));
+        pnlSideBar.setPreferredSize(new java.awt.Dimension(210, 700));
+        pnlSideBar.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 996, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 580, Short.MAX_VALUE)
-        );
+        lblBrandName.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblBrandName.setForeground(new java.awt.Color(255, 255, 255));
+        lblBrandName.setText("Groomify");
+        lblBrandName.setPreferredSize(new java.awt.Dimension(89, 32));
+        pnlSideBar.add(lblBrandName, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 24, -1, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        lblIcon.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/logo_badge_36.png"))); // NOI18N
+        pnlSideBar.add(lblIcon, new org.netbeans.lib.awtextra.AbsoluteConstraints(18, 24, -1, -1));
+
+        btnGroupSlideBar.add(btnDashboard);
+        btnDashboard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/dashboard_20.png"))); // NOI18N
+        btnDashboard.setText("Dashboard");
+        btnDashboard.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        pnlSideBar.add(btnDashboard, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 90, 182, 40));
+
+        btnGroupSlideBar.add(btnAppointment);
+        btnAppointment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/appointments_20.png"))); // NOI18N
+        btnAppointment.setText("Appointments");
+        btnAppointment.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        pnlSideBar.add(btnAppointment, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 136, 182, 40));
+
+        btnGroupSlideBar.add(btnOwner);
+        btnOwner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/owners_20.png"))); // NOI18N
+        btnOwner.setText("Owners");
+        btnOwner.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        pnlSideBar.add(btnOwner, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 182, 182, 40));
+
+        btnGroupSlideBar.add(btnPet);
+        btnPet.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/pets_20.png"))); // NOI18N
+        btnPet.setText("Pets");
+        btnPet.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        pnlSideBar.add(btnPet, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 228, 182, 40));
+
+        btnGroupSlideBar.add(btnService);
+        btnService.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/services_20.png"))); // NOI18N
+        btnService.setText("Services");
+        btnService.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        pnlSideBar.add(btnService, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 274, 182, 40));
+
+        btnGroupSlideBar.add(btnBilling);
+        btnBilling.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/billing_20.png"))); // NOI18N
+        btnBilling.setText("Billing");
+        btnBilling.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        pnlSideBar.add(btnBilling, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 320, 182, 40));
+
+        btnGroupSlideBar.add(btnReport);
+        btnReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/reports_20.png"))); // NOI18N
+        btnReport.setText("Reports");
+        btnReport.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        pnlSideBar.add(btnReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 366, 182, 40));
+
+        btnGroupSlideBar.add(btnLogout);
+        btnLogout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/logout_20.png"))); // NOI18N
+        btnLogout.setText("Log out");
+        btnLogout.setActionCommand("Logout");
+        btnLogout.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        pnlSideBar.add(btnLogout, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 620, 182, 40));
+
+        getContentPane().add(pnlSideBar, java.awt.BorderLayout.LINE_START);
+
+        pnlContent.setBackground(new java.awt.Color(251, 246, 240));
+        pnlContent.setPreferredSize(new java.awt.Dimension(890, 700));
+        pnlContent.setLayout(new java.awt.CardLayout());
+        getContentPane().add(pnlContent, java.awt.BorderLayout.CENTER);
 
         pack();
         setLocationRelativeTo(null);
@@ -87,6 +154,18 @@ public class FrameDashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel jPanel1;
+    private groomify.view.RoundedToggleButton btnAppointment;
+    private groomify.view.RoundedToggleButton btnBilling;
+    private groomify.view.RoundedToggleButton btnDashboard;
+    private javax.swing.ButtonGroup btnGroupSlideBar;
+    private groomify.view.RoundedToggleButton btnLogout;
+    private groomify.view.RoundedToggleButton btnOwner;
+    private groomify.view.RoundedToggleButton btnPet;
+    private groomify.view.RoundedToggleButton btnReport;
+    private groomify.view.RoundedToggleButton btnService;
+    private javax.swing.JLabel lblBrandName;
+    private javax.swing.JLabel lblIcon;
+    private javax.swing.JPanel pnlContent;
+    private javax.swing.JPanel pnlSideBar;
     // End of variables declaration//GEN-END:variables
 }
