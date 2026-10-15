@@ -19,14 +19,22 @@ public class FrameDashboard extends javax.swing.JFrame {
     /**
      * Creates new form FrameDashboard
      */
-    public FrameDashboard() {
+
+    public FrameDashboard(String role) {
+        if(role.equals("ADMIN")){
+            initComponents();
         
-        initComponents();
+            setIconImage(new ImageIcon(getClass().getResource("/groomify/util/img/logo_badge_36.png")).getImage());
         
-        setIconImage(new ImageIcon(getClass().getResource("/groomify/util/img/logo_badge_36.png")).getImage());
+            btnDashboard.setSelected(true);
+            
+        }else if(role.equals("RECEPTIONIST")){
+            initComponents();
         
-        btnDashboard.setSelected(true);
-        
+            setIconImage(new ImageIcon(getClass().getResource("/groomify/util/img/logo_badge_36.png")).getImage());
+            
+            btnDashboard.setEnabled(false);
+        }
     }
 
     /**
@@ -83,6 +91,7 @@ public class FrameDashboard extends javax.swing.JFrame {
         btnAppointment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/appointments_20.png"))); // NOI18N
         btnAppointment.setText("Appointments");
         btnAppointment.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnAppointment.addActionListener(this::btnAppointmentActionPerformed);
         pnlSideBar.add(btnAppointment, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 136, 182, 40));
 
         btnGroupSlideBar.add(btnOwner);
@@ -121,6 +130,7 @@ public class FrameDashboard extends javax.swing.JFrame {
         btnLogout.setText("Log out");
         btnLogout.setActionCommand("Logout");
         btnLogout.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnLogout.addActionListener(this::btnLogoutActionPerformed);
         pnlSideBar.add(btnLogout, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 620, 182, 40));
 
         getContentPane().add(pnlSideBar, java.awt.BorderLayout.LINE_START);
@@ -144,6 +154,16 @@ public class FrameDashboard extends javax.swing.JFrame {
         showPage("dashboard");
     }//GEN-LAST:event_btnOwnerActionPerformed
 
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        FrameLogin frameLogin = new FrameLogin();
+        frameLogin.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnLogoutActionPerformed
+
+    private void btnAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAppointmentActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAppointmentActionPerformed
+
     private void showPage(String card) {
         CardLayout layout = (CardLayout) pnlContent.getLayout();
         layout.show(pnlContent, card);
@@ -152,27 +172,30 @@ public class FrameDashboard extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new FrameDashboard().setVisible(true));
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+//            logger.log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        
+//        
+//        
+//        java.awt.EventQueue.invokeLater(() -> new FrameDashboard().setVisible(true));
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private groomify.view.RoundedToggleButton btnAppointment;

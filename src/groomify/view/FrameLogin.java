@@ -286,9 +286,17 @@ public class FrameLogin extends javax.swing.JFrame {
             User user = userController.checkCredentials(txtUsername.getText(), String.valueOf(txtPassword.getPassword()));
             
             if(user != null){
-                FrameDashboard dashboard = new FrameDashboard();
-                dashboard.setVisible(true);
-                this.dispose();
+                String role = user.getRole();
+                
+                if(role.equals("ADMIN")){
+                    FrameDashboard dashboard = new FrameDashboard("ADMIN");
+                    dashboard.setVisible(true);
+                    this.dispose();
+                }else if(role.equals("RECEPTIONIST")){
+                    FrameDashboard dashboard = new FrameDashboard("RECEPTIONIST");
+                    dashboard.setVisible(true);
+                    this.dispose();
+                }
             }else{
                 lblError.setText("Invalid username or password!");
                 
