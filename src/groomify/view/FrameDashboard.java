@@ -4,6 +4,7 @@
  */
 package groomify.view;
 
+import java.awt.CardLayout;
 import javax.swing.ImageIcon;
 
 
@@ -23,6 +24,8 @@ public class FrameDashboard extends javax.swing.JFrame {
         initComponents();
         
         setIconImage(new ImageIcon(getClass().getResource("/groomify/util/img/logo_badge_36.png")).getImage());
+        
+        btnDashboard.setSelected(true);
         
     }
 
@@ -48,6 +51,7 @@ public class FrameDashboard extends javax.swing.JFrame {
         btnReport = new groomify.view.RoundedToggleButton();
         btnLogout = new groomify.view.RoundedToggleButton();
         pnlContent = new javax.swing.JPanel();
+        dashboard = new groomify.view.PanelDashboard();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Groomify");
@@ -72,6 +76,7 @@ public class FrameDashboard extends javax.swing.JFrame {
         btnDashboard.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/dashboard_20.png"))); // NOI18N
         btnDashboard.setText("Dashboard");
         btnDashboard.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnDashboard.addActionListener(this::btnDashboardActionPerformed);
         pnlSideBar.add(btnDashboard, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 90, 182, 40));
 
         btnGroupSlideBar.add(btnAppointment);
@@ -84,6 +89,7 @@ public class FrameDashboard extends javax.swing.JFrame {
         btnOwner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/owners_20.png"))); // NOI18N
         btnOwner.setText("Owners");
         btnOwner.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnOwner.addActionListener(this::btnOwnerActionPerformed);
         pnlSideBar.add(btnOwner, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 182, 182, 40));
 
         btnGroupSlideBar.add(btnPet);
@@ -122,12 +128,27 @@ public class FrameDashboard extends javax.swing.JFrame {
         pnlContent.setBackground(new java.awt.Color(251, 246, 240));
         pnlContent.setPreferredSize(new java.awt.Dimension(890, 700));
         pnlContent.setLayout(new java.awt.CardLayout());
+        pnlContent.add(dashboard, "card2");
+
         getContentPane().add(pnlContent, java.awt.BorderLayout.CENTER);
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnDashboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDashboardActionPerformed
+        showPage("dashboard");
+    }//GEN-LAST:event_btnDashboardActionPerformed
+
+    private void btnOwnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOwnerActionPerformed
+        showPage("dashboard");
+    }//GEN-LAST:event_btnOwnerActionPerformed
+
+    private void showPage(String card) {
+        CardLayout layout = (CardLayout) pnlContent.getLayout();
+        layout.show(pnlContent, card);
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -163,6 +184,7 @@ public class FrameDashboard extends javax.swing.JFrame {
     private groomify.view.RoundedToggleButton btnPet;
     private groomify.view.RoundedToggleButton btnReport;
     private groomify.view.RoundedToggleButton btnService;
+    private groomify.view.PanelDashboard dashboard;
     private javax.swing.JLabel lblBrandName;
     private javax.swing.JLabel lblIcon;
     private javax.swing.JPanel pnlContent;
