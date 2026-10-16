@@ -196,17 +196,19 @@ public class PanelOwners extends javax.swing.JPanel {
         btnUpdate.setBackground(new java.awt.Color(254, 243, 199));
         btnUpdate.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnUpdate.setForeground(new java.awt.Color(146, 64, 14));
+        btnUpdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/pencil_18.png"))); // NOI18N
         btnUpdate.setText("Update");
-        panelOwnerBox.add(btnUpdate, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 425, 90, 40));
+        panelOwnerBox.add(btnUpdate, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 425, 95, 40));
 
         btnClear.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnClear.setForeground(new java.awt.Color(141, 91, 58));
         btnClear.setText("Clear");
-        panelOwnerBox.add(btnClear, new org.netbeans.lib.awtextra.AbsoluteConstraints(121, 425, 74, 40));
+        panelOwnerBox.add(btnClear, new org.netbeans.lib.awtextra.AbsoluteConstraints(125, 425, 70, 40));
 
         btnDelete.setBackground(new java.awt.Color(254, 226, 226));
         btnDelete.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnDelete.setForeground(new java.awt.Color(153, 27, 27));
+        btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/trash_18.png"))); // NOI18N
         btnDelete.setText("Delete");
         panelOwnerBox.add(btnDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(205, 425, 90, 40));
 

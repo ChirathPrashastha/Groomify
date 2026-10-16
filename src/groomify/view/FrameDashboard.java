@@ -65,6 +65,7 @@ public class FrameDashboard extends javax.swing.JFrame {
         dashboard = new groomify.view.PanelDashboard();
         appointment = new groomify.view.PanelAppointments();
         owner = new groomify.view.PanelOwners();
+        pet = new groomify.view.PanelPets();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Groomify");
@@ -110,6 +111,7 @@ public class FrameDashboard extends javax.swing.JFrame {
         btnPet.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/pets_20.png"))); // NOI18N
         btnPet.setText("Pets");
         btnPet.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnPet.addActionListener(this::btnPetActionPerformed);
         pnlSideBar.add(btnPet, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 228, 182, 40));
 
         btnGroupSlideBar.add(btnService);
@@ -146,6 +148,7 @@ public class FrameDashboard extends javax.swing.JFrame {
         pnlContent.add(dashboard, "dashboard");
         pnlContent.add(appointment, "appointments");
         pnlContent.add(owner, "owners");
+        pnlContent.add(pet, "pets");
 
         getContentPane().add(pnlContent, java.awt.BorderLayout.CENTER);
 
@@ -170,6 +173,10 @@ public class FrameDashboard extends javax.swing.JFrame {
     private void btnAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAppointmentActionPerformed
         showPage("appointments");
     }//GEN-LAST:event_btnAppointmentActionPerformed
+
+    private void btnPetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPetActionPerformed
+        showPage("pets");
+    }//GEN-LAST:event_btnPetActionPerformed
 
     private void showPage(String card) {
         CardLayout layout = (CardLayout) pnlContent.getLayout();
@@ -219,6 +226,7 @@ public class FrameDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel lblBrandName;
     private javax.swing.JLabel lblIcon;
     private groomify.view.PanelOwners owner;
+    private groomify.view.PanelPets pet;
     private javax.swing.JPanel pnlContent;
     private javax.swing.JPanel pnlSideBar;
     // End of variables declaration//GEN-END:variables
