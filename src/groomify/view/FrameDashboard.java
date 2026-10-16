@@ -59,7 +59,6 @@ public class FrameDashboard extends javax.swing.JFrame {
         btnPet = new groomify.view.RoundedToggleButton();
         btnService = new groomify.view.RoundedToggleButton();
         btnBilling = new groomify.view.RoundedToggleButton();
-        btnReport = new groomify.view.RoundedToggleButton();
         btnLogout = new groomify.view.RoundedToggleButton();
         pnlContent = new javax.swing.JPanel();
         dashboard = new groomify.view.PanelDashboard();
@@ -67,6 +66,7 @@ public class FrameDashboard extends javax.swing.JFrame {
         owner = new groomify.view.PanelOwners();
         pet = new groomify.view.PanelPets();
         service = new groomify.view.PanelServices();
+        billing = new groomify.view.PanelBilling();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Groomify");
@@ -126,13 +126,8 @@ public class FrameDashboard extends javax.swing.JFrame {
         btnBilling.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/billing_20.png"))); // NOI18N
         btnBilling.setText("Billing");
         btnBilling.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnBilling.addActionListener(this::btnBillingActionPerformed);
         pnlSideBar.add(btnBilling, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 320, 182, 40));
-
-        btnGroupSlideBar.add(btnReport);
-        btnReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/reports_20.png"))); // NOI18N
-        btnReport.setText("Reports");
-        btnReport.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        pnlSideBar.add(btnReport, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 366, 182, 40));
 
         btnGroupSlideBar.add(btnLogout);
         btnLogout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/logout_20.png"))); // NOI18N
@@ -152,6 +147,7 @@ public class FrameDashboard extends javax.swing.JFrame {
         pnlContent.add(owner, "owners");
         pnlContent.add(pet, "pets");
         pnlContent.add(service, "services");
+        pnlContent.add(billing, "billings");
 
         getContentPane().add(pnlContent, java.awt.BorderLayout.CENTER);
 
@@ -184,6 +180,10 @@ public class FrameDashboard extends javax.swing.JFrame {
     private void btnServiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnServiceActionPerformed
         showPage("services");
     }//GEN-LAST:event_btnServiceActionPerformed
+
+    private void btnBillingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBillingActionPerformed
+        showPage("billings");
+    }//GEN-LAST:event_btnBillingActionPerformed
 
     private void showPage(String card) {
         CardLayout layout = (CardLayout) pnlContent.getLayout();
@@ -220,6 +220,7 @@ public class FrameDashboard extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private groomify.view.PanelAppointments appointment;
+    private groomify.view.PanelBilling billing;
     private groomify.view.RoundedToggleButton btnAppointment;
     private groomify.view.RoundedToggleButton btnBilling;
     private groomify.view.RoundedToggleButton btnDashboard;
@@ -227,7 +228,6 @@ public class FrameDashboard extends javax.swing.JFrame {
     private groomify.view.RoundedToggleButton btnLogout;
     private groomify.view.RoundedToggleButton btnOwner;
     private groomify.view.RoundedToggleButton btnPet;
-    private groomify.view.RoundedToggleButton btnReport;
     private groomify.view.RoundedToggleButton btnService;
     private groomify.view.PanelDashboard dashboard;
     private javax.swing.JLabel lblBrandName;
