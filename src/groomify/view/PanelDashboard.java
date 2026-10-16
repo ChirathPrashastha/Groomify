@@ -54,10 +54,11 @@ public class PanelDashboard extends javax.swing.JPanel {
         lblPendingPayVal = new javax.swing.JLabel();
         pnlUpNext = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        scrollPaneUpNext = new javax.swing.JScrollPane();
         tblUpNext = new javax.swing.JTable();
 
         setBackground(new java.awt.Color(251, 246, 240));
+        setOpaque(false);
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lblGreeting.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
@@ -154,10 +155,11 @@ public class PanelDashboard extends javax.swing.JPanel {
         jLabel1.setText("Up next");
         pnlUpNext.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 14, -1, -1));
 
-        jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
-        jScrollPane1.setPreferredSize(new java.awt.Dimension(448, 330));
+        scrollPaneUpNext.setBackground(new java.awt.Color(255, 255, 255));
+        scrollPaneUpNext.setBorder(null);
+        scrollPaneUpNext.setViewportBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        scrollPaneUpNext.setPreferredSize(new java.awt.Dimension(448, 330));
 
-        tblUpNext.setBackground(new java.awt.Color(255, 255, 255));
         tblUpNext.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         tblUpNext.setForeground(new java.awt.Color(43, 35, 32));
         tblUpNext.setModel(new javax.swing.table.DefaultTableModel(
@@ -180,14 +182,16 @@ public class PanelDashboard extends javax.swing.JPanel {
             }
         });
         tblUpNext.setFillsViewportHeight(true);
+        tblUpNext.setFocusable(false);
+        tblUpNext.setGridColor(new java.awt.Color(227, 205, 182));
         tblUpNext.setRowHeight(34);
         tblUpNext.setSelectionBackground(new java.awt.Color(245, 233, 220));
         tblUpNext.setSelectionForeground(new java.awt.Color(43, 35, 32));
         tblUpNext.setShowGrid(false);
         tblUpNext.setShowHorizontalLines(true);
-        jScrollPane1.setViewportView(tblUpNext);
+        scrollPaneUpNext.setViewportView(tblUpNext);
 
-        pnlUpNext.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 48, -1, -1));
+        pnlUpNext.add(scrollPaneUpNext, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 48, -1, -1));
 
         add(pnlUpNext, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 212, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
@@ -195,7 +199,6 @@ public class PanelDashboard extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblAvater;
     private javax.swing.JLabel lblBell;
     private javax.swing.JLabel lblDate;
@@ -213,6 +216,7 @@ public class PanelDashboard extends javax.swing.JPanel {
     private javax.swing.JPanel pnlStat3;
     private javax.swing.JPanel pnlStat4;
     private javax.swing.JPanel pnlUpNext;
+    private javax.swing.JScrollPane scrollPaneUpNext;
     private javax.swing.JTable tblUpNext;
     // End of variables declaration//GEN-END:variables
 }

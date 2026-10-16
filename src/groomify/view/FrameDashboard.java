@@ -34,6 +34,9 @@ public class FrameDashboard extends javax.swing.JFrame {
             setIconImage(new ImageIcon(getClass().getResource("/groomify/util/img/logo_badge_36.png")).getImage());
             
             btnDashboard.setEnabled(false);
+            
+            showPage("appointments");
+            btnAppointment.setSelected(true);
         }
     }
 
@@ -60,6 +63,7 @@ public class FrameDashboard extends javax.swing.JFrame {
         btnLogout = new groomify.view.RoundedToggleButton();
         pnlContent = new javax.swing.JPanel();
         dashboard = new groomify.view.PanelDashboard();
+        appointment = new groomify.view.PanelAppointments();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Groomify");
@@ -138,7 +142,8 @@ public class FrameDashboard extends javax.swing.JFrame {
         pnlContent.setBackground(new java.awt.Color(251, 246, 240));
         pnlContent.setPreferredSize(new java.awt.Dimension(890, 700));
         pnlContent.setLayout(new java.awt.CardLayout());
-        pnlContent.add(dashboard, "card2");
+        pnlContent.add(dashboard, "dashboard");
+        pnlContent.add(appointment, "appointments");
 
         getContentPane().add(pnlContent, java.awt.BorderLayout.CENTER);
 
@@ -161,7 +166,7 @@ public class FrameDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void btnAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAppointmentActionPerformed
-        // TODO add your handling code here:
+        showPage("appointments");
     }//GEN-LAST:event_btnAppointmentActionPerformed
 
     private void showPage(String card) {
@@ -198,6 +203,7 @@ public class FrameDashboard extends javax.swing.JFrame {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private groomify.view.PanelAppointments appointment;
     private groomify.view.RoundedToggleButton btnAppointment;
     private groomify.view.RoundedToggleButton btnBilling;
     private groomify.view.RoundedToggleButton btnDashboard;
