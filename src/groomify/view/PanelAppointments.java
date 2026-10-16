@@ -78,7 +78,7 @@ public class PanelAppointments extends javax.swing.JPanel {
         add(lblSubTitile, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 56, -1, -1));
 
         btnAddAppointment.setBackground(new java.awt.Color(244, 184, 96));
-        btnAddAppointment.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        btnAddAppointment.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         btnAddAppointment.setForeground(new java.awt.Color(43, 35, 32));
         btnAddAppointment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/plus_18.png"))); // NOI18N
         btnAddAppointment.setText("New appointment");
@@ -147,7 +147,6 @@ public class PanelAppointments extends javax.swing.JPanel {
         btnCancelled.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnCancelled.setForeground(new java.awt.Color(153, 27, 27));
         btnCancelled.setText("Cancelled");
-        btnCancelled.setActionCommand("Cancelled");
         add(btnCancelled, new org.netbeans.lib.awtextra.AbsoluteConstraints(777, 104, 88, 32));
 
         tblAppointments.setModel(new javax.swing.table.DefaultTableModel(

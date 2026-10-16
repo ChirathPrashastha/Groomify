@@ -64,6 +64,7 @@ public class FrameDashboard extends javax.swing.JFrame {
         pnlContent = new javax.swing.JPanel();
         dashboard = new groomify.view.PanelDashboard();
         appointment = new groomify.view.PanelAppointments();
+        owner = new groomify.view.PanelOwners();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Groomify");
@@ -144,6 +145,7 @@ public class FrameDashboard extends javax.swing.JFrame {
         pnlContent.setLayout(new java.awt.CardLayout());
         pnlContent.add(dashboard, "dashboard");
         pnlContent.add(appointment, "appointments");
+        pnlContent.add(owner, "owners");
 
         getContentPane().add(pnlContent, java.awt.BorderLayout.CENTER);
 
@@ -156,7 +158,7 @@ public class FrameDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDashboardActionPerformed
 
     private void btnOwnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOwnerActionPerformed
-        showPage("dashboard");
+        showPage("owners");
     }//GEN-LAST:event_btnOwnerActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
@@ -216,6 +218,7 @@ public class FrameDashboard extends javax.swing.JFrame {
     private groomify.view.PanelDashboard dashboard;
     private javax.swing.JLabel lblBrandName;
     private javax.swing.JLabel lblIcon;
+    private groomify.view.PanelOwners owner;
     private javax.swing.JPanel pnlContent;
     private javax.swing.JPanel pnlSideBar;
     // End of variables declaration//GEN-END:variables

@@ -66,7 +66,7 @@
           <Color blue="60" green="b8" red="f4" type="rgb"/>
         </Property>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Segoe UI" size="13" style="0"/>
+          <Font name="Segoe UI" size="13" style="1"/>
         </Property>
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="20" green="23" red="2b" type="rgb"/>
@@ -298,7 +298,6 @@
           <Color blue="1b" green="1b" red="99" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Cancelled"/>
-        <Property name="actionCommand" type="java.lang.String" value="Cancelled"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
