@@ -36,7 +36,19 @@ public class OwnerController {
         return ownerDAO.getAllOwners();
     }
     
+    public ArrayList<String> getAllOwnerNames(){
+        return ownerDAO.getAllOwnerNames();
+    }
+    
     public Owner searchByName(String name){
         return ownerDAO.searchByName(name);
+    }
+    
+    public Owner getOwnerByOwnerId(int id){
+        return ownerDAO.getOwnerByOwnerId(id);
+    }
+    
+    public int getOwnerIdbyOwnerName(String name){
+        return ownerDAO.getOwnerIdbyOwnerName(name);
     }
 }

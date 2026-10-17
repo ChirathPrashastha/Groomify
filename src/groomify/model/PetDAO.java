@@ -45,7 +45,7 @@ public class PetDAO {
     
     public boolean updatePet(Pet pet){
         try{
-            String sql = "UPDATE pets SET name=?, species=?, breed=?, coat_type=? owner_id=? WHERE pet_id=?";
+            String sql = "UPDATE pets SET name=?, species=?, breed=?, coat_type=?, owner_id=? WHERE pet_id=?";
             
             PreparedStatement statement = connection.prepareStatement(sql);
             

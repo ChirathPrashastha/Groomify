@@ -5,17 +5,28 @@
 package groomify.view;
 
 import com.formdev.flatlaf.FlatLightLaf;
-
+import groomify.controller.PetController;
+import java.awt.Frame;
+import java.util.ArrayList;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
+import groomify.model.Pet;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Chirath
  */
 public class PanelPets extends javax.swing.JPanel {
+    
+    private PetController petController;
+    private Pet selectedPet;
 
     /**
      * Creates new form PanelPets
      */
     public PanelPets() {
+        
+        petController = new PetController();
         
         FlatLightLaf.setup();
         
@@ -30,6 +41,8 @@ public class PanelPets extends javax.swing.JPanel {
         
         btnUpdatePet.putClientProperty("FlatLaf.style", "arc: 25");
         btnDeletePet.putClientProperty("FlatLaf.style", "arc: 25");
+        
+        loadTable();
     }
 
     /**
@@ -53,7 +66,7 @@ public class PanelPets extends javax.swing.JPanel {
         btnCats = new javax.swing.JToggleButton();
         btnOthers = new javax.swing.JToggleButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblPets = new javax.swing.JTable();
         btnUpdatePet = new javax.swing.JButton();
         btnDeletePet = new javax.swing.JButton();
 
@@ -75,6 +88,7 @@ public class PanelPets extends javax.swing.JPanel {
         btnAddPet.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/plus_18.png"))); // NOI18N
         btnAddPet.setText("Register pet");
         btnAddPet.setIconTextGap(10);
+        btnAddPet.addActionListener(this::btnAddPetActionPerformed);
         add(btnAddPet, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 28, 172, 40));
 
         pnlSearchBox.setBackground(new java.awt.Color(255, 255, 255));
@@ -127,18 +141,23 @@ public class PanelPets extends javax.swing.JPanel {
         btnOthers.setBorder(null);
         add(btnOthers, new org.netbeans.lib.awtextra.AbsoluteConstraints(684, 104, 72, 32));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblPets.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Pet", "Species", "Breed", "Owner", "Age", "Weight", "Coat", "Notes"
+                "Pet ID", "Pet", "Species", "Breed", "Coat", "Owner"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tblPets.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblPetsMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblPets);
 
         add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 156, 834, 448));
 
@@ -150,6 +169,7 @@ public class PanelPets extends javax.swing.JPanel {
         btnUpdatePet.setFocusable(false);
         btnUpdatePet.setIconTextGap(11);
         btnUpdatePet.setInheritsPopupMenu(true);
+        btnUpdatePet.addActionListener(this::btnUpdatePetActionPerformed);
         add(btnUpdatePet, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 616, 158, 40));
 
         btnDeletePet.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
@@ -160,10 +180,78 @@ public class PanelPets extends javax.swing.JPanel {
         btnDeletePet.setFocusable(false);
         btnDeletePet.setIconTextGap(10);
         btnDeletePet.setInheritsPopupMenu(true);
+        btnDeletePet.addActionListener(this::btnDeletePetActionPerformed);
         add(btnDeletePet, new org.netbeans.lib.awtextra.AbsoluteConstraints(704, 616, 158, 40));
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnAddPetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPetActionPerformed
+        
+        Frame parent = (Frame) SwingUtilities.getWindowAncestor(this);
+        
+        DialogFormRegisterPets dialogRegPets = new DialogFormRegisterPets(parent,true);
+        dialogRegPets.setVisible(true);
+    }//GEN-LAST:event_btnAddPetActionPerformed
 
+    private void tblPetsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblPetsMouseClicked
+        int selectedRow = tblPets.getSelectedRow();
+        
+        if(selectedRow >= 0){
+            int selPetId = Integer.parseInt(tblPets.getValueAt(selectedRow, 0).toString());
+            String selPetName = tblPets.getValueAt(selectedRow, 1).toString();
+            String selSpecies = tblPets.getValueAt(selectedRow, 2).toString();
+            String selBreed = tblPets.getValueAt(selectedRow, 3).toString();
+            String selCoat = tblPets.getValueAt(selectedRow, 4).toString();
+            int selOwnerId = Integer.parseInt(tblPets.getValueAt(selectedRow, 5).toString());
+            
+            selectedPet = new Pet(selPetId, selPetName, selSpecies, selBreed, selCoat, selOwnerId);
+        }
+    }//GEN-LAST:event_tblPetsMouseClicked
+
+    private void btnUpdatePetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdatePetActionPerformed
+        if(selectedPet != null){
+            Frame parent = (Frame) SwingUtilities.getWindowAncestor(this);
+        
+            DialogFormUpdatePets dialogUpdatePets = new DialogFormUpdatePets(parent, true, selectedPet);
+            dialogUpdatePets.setVisible(true);
+        }else{
+            JOptionPane.showMessageDialog(null, "Please select the row that needed to be updated!", "Information", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_btnUpdatePetActionPerformed
+
+    private void btnDeletePetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeletePetActionPerformed
+        if(selectedPet != null){
+            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to remove Pet : " + selectedPet.getName()+ " permanently ?", "Confirmation", JOptionPane.YES_NO_OPTION);
+            
+            if(result == JOptionPane.YES_OPTION){
+                boolean isSuccess = petController.deletePet(selectedPet.getPetId());
+            
+                if(isSuccess){
+                    JOptionPane.showMessageDialog(null, "Pet deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                
+                    loadTable();
+                    selectedPet = null;
+                }else{
+                    JOptionPane.showMessageDialog(null, "Failed to delete the pet!", "Failed", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "Please select the row that needed to be deleted!", "Information", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_btnDeletePetActionPerformed
+
+    private void loadTable(){
+        DefaultTableModel model = (DefaultTableModel)tblPets.getModel();
+        
+        model.setRowCount(0);
+        
+        ArrayList<Pet> petList = petController.getAllPets();
+        
+        for(Pet pet : petList){
+            Object[] row = {pet.getPetId(), pet.getName(), pet.getSpecies(), pet.getBreed(), pet.getCoatType(), pet.getOwnerId()};
+            model.addRow(row);
+        }
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddPet;
     private javax.swing.JToggleButton btnAll;
@@ -174,11 +262,11 @@ public class PanelPets extends javax.swing.JPanel {
     private javax.swing.JButton btnUpdatePet;
     private javax.swing.ButtonGroup groupSpeices;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblSearchIcon;
     private javax.swing.JLabel lblSubTitile;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JPanel pnlSearchBox;
+    private javax.swing.JTable tblPets;
     private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 }

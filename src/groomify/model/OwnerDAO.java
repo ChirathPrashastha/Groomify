@@ -112,6 +112,29 @@ public class OwnerDAO {
         return null;
     }
     
+    public ArrayList<String> getAllOwnerNames(){
+        ArrayList<String> nameList = new ArrayList<>();
+        
+        try{
+            String sql = "SELECT full_name FROM owners";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            ResultSet rst = statement.executeQuery();
+            
+            while(rst.next()){
+                nameList.add(rst.getString("full_name"));
+            }
+            
+            return nameList;
+            
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return null;
+    }
+    
     public Owner searchByName(String name){
         try{
             String sql = "SELECT * FROM owners WHERE full_name=?";
@@ -123,6 +146,48 @@ public class OwnerDAO {
             ResultSet rst = statement.executeQuery();
             
             return new Owner(rst.getInt("owner_id"), rst.getString("full_name"), rst.getString("contact"), rst.getString("address"), rst.getString("email"));
+            
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return null;
+    }
+    
+    public int getOwnerIdbyOwnerName(String name){
+        try{
+            String sql = "SELECT owner_id FROM owners WHERE full_name=?";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            statement.setString(1, name);
+            
+            ResultSet rst = statement.executeQuery();
+            
+            while(rst.next()){
+                return rst.getInt("owner_id");
+            }
+            
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return 0;
+    }
+    
+    public Owner getOwnerByOwnerId(int ownerId){
+        try{
+            String sql = "SELECT * FROM owners WHERE owner_id=?";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            statement.setInt(1, ownerId);
+            
+            ResultSet rst = statement.executeQuery();
+            
+            if(rst.next()){
+                return new Owner(rst.getInt("owner_id"), rst.getString("full_name"), rst.getString("contact"), rst.getString("address"), rst.getString("email"));
+            }
             
         }catch(Exception ex){
             ex.printStackTrace();
