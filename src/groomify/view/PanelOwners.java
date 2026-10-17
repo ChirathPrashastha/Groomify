@@ -8,7 +8,9 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatLightLaf;
 import groomify.controller.OwnerController;
 import groomify.model.Owner;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -26,6 +28,7 @@ public class PanelOwners extends javax.swing.JPanel {
     public PanelOwners() {
         
         ownerController = new OwnerController();
+        selectedOwnerId = 0;
         
         FlatLightLaf.setup();
         
@@ -36,6 +39,8 @@ public class PanelOwners extends javax.swing.JPanel {
         btnUpdateOwner.putClientProperty("FlatLaf.style", "arc: 25");
         btnDeleteOwner.putClientProperty("FlatLaf.style", "arc: 25");
         btnClear.putClientProperty("FlatLaf.style", "arc: 25");
+        
+        loadTable();
     }
 
     /**
@@ -94,13 +99,13 @@ public class PanelOwners extends javax.swing.JPanel {
 
         tblOwners.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "owner_id", "Owner", "Contact", "Pets"
+                "owner_id", "Owner", "Contact", "Address", "Email"
             }
         ));
         tblOwners.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -267,6 +272,9 @@ public class PanelOwners extends javax.swing.JPanel {
             
             if(isSuccess){
                 JOptionPane.showMessageDialog(null, "Owner saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                
+                loadTable();
+                clearFields();
             }else{
                 JOptionPane.showMessageDialog(null, "Failed to add the owner!", "Failed", JOptionPane.ERROR_MESSAGE);
             }
@@ -274,7 +282,25 @@ public class PanelOwners extends javax.swing.JPanel {
     }//GEN-LAST:event_btnAddOwnerActionPerformed
 
     private void btnUpdateOwnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateOwnerActionPerformed
-        
+        if(selectedOwnerId == 0){
+            JOptionPane.showMessageDialog(null, "Please select the row that needed to update", "Infromation", JOptionPane.INFORMATION_MESSAGE);
+        }else if(txtName.getText().isEmpty() || txtContact.getText().isEmpty() || txtAddress.getText().isEmpty() || txtEmail.getText().isEmpty()){
+            lblError.setText("Please fill all the fields");
+        }else{
+            
+            Owner owner = new Owner(selectedOwnerId, txtName.getText(), txtContact.getText(), txtAddress.getText(), txtEmail.getText());
+            
+            boolean isSuccess = ownerController.updateOwner(owner);
+            
+            if(isSuccess){
+                JOptionPane.showMessageDialog(null, "Owner updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                
+                loadTable();
+                clearFields();
+            }else{
+                JOptionPane.showMessageDialog(null, "Failed to update the owner!", "Failed", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_btnUpdateOwnerActionPerformed
 
     private void tblOwnersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblOwnersMouseClicked
@@ -282,7 +308,12 @@ public class PanelOwners extends javax.swing.JPanel {
         
         if(selectedRow >= 0){
             selectedOwnerId = Integer.parseInt(tblOwners.getValueAt(selectedRow, 0).toString());
-            lblError.setText(String.valueOf(selectedRow));
+            
+            txtName.setText(tblOwners.getValueAt(selectedRow, 1).toString());
+            txtContact.setText(tblOwners.getValueAt(selectedRow, 2).toString());
+            txtAddress.setText(tblOwners.getValueAt(selectedRow, 3).toString());
+            txtEmail.setText(tblOwners.getValueAt(selectedRow, 4).toString());
+            
         }
         
     }//GEN-LAST:event_tblOwnersMouseClicked
@@ -292,9 +323,42 @@ public class PanelOwners extends javax.swing.JPanel {
     }//GEN-LAST:event_btnClearActionPerformed
 
     private void btnDeleteOwnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteOwnerActionPerformed
-        
+        if(selectedOwnerId == 0){
+            JOptionPane.showMessageDialog(null, "Please select the row that needed to update", "Infromation", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to remove owner ID : " + selectedOwnerId + " permanently ?", "Confirmation", JOptionPane.YES_NO_OPTION);
+            
+            if(result == JOptionPane.YES_OPTION){
+                boolean isSuccess = ownerController.deleteOwner(selectedOwnerId);
+            
+                if(isSuccess){
+                    JOptionPane.showMessageDialog(null, "Owner deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                
+                    loadTable();
+                    clearFields();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Failed to delete the owner!", "Failed", JOptionPane.ERROR_MESSAGE);
+                }
+            }else{
+                clearFields();
+                selectedOwnerId = 0;
+            }
+        }
     }//GEN-LAST:event_btnDeleteOwnerActionPerformed
 
+    private void loadTable(){
+        DefaultTableModel model = (DefaultTableModel)tblOwners.getModel();
+        
+        model.setRowCount(0);
+        
+        ArrayList<Owner> ownerList = ownerController.getAllOwners();
+        
+        for(Owner owner : ownerList){
+            Object[] row = {owner.getOwnerId(), owner.getName(), owner.getContact(), owner.getAddress(), owner.getEmail()};
+            model.addRow(row);
+        }
+    }
+    
     private void clearFields(){
         txtSearch.setText("");
         txtName.setText("");
