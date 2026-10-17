@@ -6,6 +6,11 @@ package groomify.view;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatLightLaf;
+import groomify.controller.ServiceController;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import groomify.model.Service;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -16,7 +21,15 @@ public class PanelServices extends javax.swing.JPanel {
     /**
      * Creates new form PanelServices
      */
+    
+    private ServiceController serviceController;
+    private String selectedStatus;
+    private Service selectedService;
+    
     public PanelServices() {
+        
+        serviceController = new ServiceController();
+        
         FlatLightLaf.setup();
         
         initComponents();
@@ -29,6 +42,8 @@ public class PanelServices extends javax.swing.JPanel {
         
         btnActive.putClientProperty("FlatLaf.style", "arc: 30");
         btnInactive.putClientProperty("FlatLaf.style", "arc: 30");
+        
+        loadTable();
     }
 
     /**
@@ -84,15 +99,20 @@ public class PanelServices extends javax.swing.JPanel {
 
         tblServices.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Service", "Description", "Price", "Status"
+                "Service ID", "Service", "Description", "Price", "Status"
             }
         ));
+        tblServices.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblServicesMouseClicked(evt);
+            }
+        });
         scrollPaneServices.setViewportView(tblServices);
 
         add(scrollPaneServices, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, -1, -1));
@@ -142,11 +162,13 @@ public class PanelServices extends javax.swing.JPanel {
         btnUpdateService.setForeground(new java.awt.Color(146, 64, 14));
         btnUpdateService.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/pencil_18.png"))); // NOI18N
         btnUpdateService.setText("Update");
+        btnUpdateService.addActionListener(this::btnUpdateServiceActionPerformed);
         panelServiceBox.add(btnUpdateService, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 425, 95, 40));
 
         btnClear.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnClear.setForeground(new java.awt.Color(141, 91, 58));
         btnClear.setText("Clear");
+        btnClear.addActionListener(this::btnClearActionPerformed);
         panelServiceBox.add(btnClear, new org.netbeans.lib.awtextra.AbsoluteConstraints(125, 425, 70, 40));
 
         btnDeleteService.setBackground(new java.awt.Color(254, 226, 226));
@@ -154,6 +176,7 @@ public class PanelServices extends javax.swing.JPanel {
         btnDeleteService.setForeground(new java.awt.Color(153, 27, 27));
         btnDeleteService.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/trash_18.png"))); // NOI18N
         btnDeleteService.setText("Delete");
+        btnDeleteService.addActionListener(this::btnDeleteServiceActionPerformed);
         panelServiceBox.add(btnDeleteService, new org.netbeans.lib.awtextra.AbsoluteConstraints(205, 425, 90, 40));
 
         txtDesc.setColumns(20);
@@ -220,9 +243,120 @@ public class PanelServices extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAddServiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddServiceActionPerformed
-        // TODO add your handling code here:
+
+        if(btnActive.isSelected()){
+            selectedStatus = "ACTIVE";
+        }else if(btnInactive.isSelected()){
+            selectedStatus = "INACTIVE";
+        }
+        
+        if(txtServiceName.getText().isEmpty() || txtDesc.getText().isEmpty() || txtPrice.getText().isEmpty() || selectedStatus == null){
+            JOptionPane.showMessageDialog(null, "Please fill all the fields", "Information", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            boolean isSuccess = serviceController.addService(new Service(txtServiceName.getText(), txtDesc.getText(), Double.parseDouble(txtPrice.getText()), selectedStatus));
+            
+                if(isSuccess){
+                    JOptionPane.showMessageDialog(null, "Service saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                
+                    loadTable();
+                    clearFields();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Failed the service saving!", "Failed", JOptionPane.ERROR_MESSAGE);
+                }
+        }
     }//GEN-LAST:event_btnAddServiceActionPerformed
 
+    private void tblServicesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblServicesMouseClicked
+        int selectedRow = tblServices.getSelectedRow();
+        
+        selectedService = new Service(
+                Integer.parseInt(tblServices.getValueAt(selectedRow, 0).toString()), 
+                tblServices.getValueAt(selectedRow, 1).toString(), 
+                tblServices.getValueAt(selectedRow, 2).toString(), 
+                Double.parseDouble(tblServices.getValueAt(selectedRow, 3).toString()), 
+                tblServices.getValueAt(selectedRow, 4).toString()
+        );
+        
+        txtServiceName.setText(selectedService.getName());
+        txtDesc.setText(selectedService.getDescription());
+        txtPrice.setText(String.valueOf(selectedService.getPrice()));
+        if(selectedService.getStatus().equals("ACTIVE")){
+            btnActive.setSelected(true);
+        }else if(selectedService.getStatus().equals("INACTIVE")){
+            btnInactive.setSelected(true);
+        }
+    }//GEN-LAST:event_tblServicesMouseClicked
+
+    private void btnUpdateServiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateServiceActionPerformed
+        if(selectedService == null){
+            JOptionPane.showMessageDialog(null, "Please select the row that needed to be updated", "Success", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            
+            if(btnActive.isSelected()){
+                selectedStatus = "ACTIVE";
+            }else if(btnInactive.isSelected()){
+                selectedStatus = "INACTIVE";
+            }
+            
+            boolean isSuccess = serviceController.updateService(new Service(selectedService.getServiceId(), txtServiceName.getText(), txtDesc.getText(), Double.parseDouble(txtPrice.getText()), selectedStatus));
+            
+                if(isSuccess){
+                    JOptionPane.showMessageDialog(null, "Service updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                
+                    loadTable();
+                    clearFields();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Failed to update the service!", "Failed", JOptionPane.ERROR_MESSAGE);
+                }
+        }
+    }//GEN-LAST:event_btnUpdateServiceActionPerformed
+
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        clearFields();
+    }//GEN-LAST:event_btnClearActionPerformed
+
+    private void btnDeleteServiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteServiceActionPerformed
+        if(selectedService == null){
+            JOptionPane.showMessageDialog(null, "Please select the row that needed to be deleted", "Success", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to remove service : " + selectedService.getName()+ " permanently ?", "Confirmation", JOptionPane.YES_NO_OPTION);
+            
+            if(result == JOptionPane.YES_OPTION){
+                boolean isSuccess = serviceController.updateService(new Service(selectedService.getServiceId(), txtServiceName.getText(), txtDesc.getText(), Double.parseDouble(txtPrice.getText()), "INACTIVE"));
+            
+                if(isSuccess){
+                    JOptionPane.showMessageDialog(null, "Service inactivated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                
+                    loadTable();
+                    clearFields();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Failed to inactivate the service!", "Failed", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }//GEN-LAST:event_btnDeleteServiceActionPerformed
+
+    private void clearFields(){
+        txtServiceName.setText("");
+        txtDesc.setText("");
+        txtPrice.setText("");
+        selectedStatus = null;
+        selectedService = null;
+        btnActive.setSelected(false);
+        btnInactive.setSelected(false);
+    }
+    
+    private void loadTable(){
+        DefaultTableModel model = (DefaultTableModel)tblServices.getModel();
+        model.setRowCount(0);
+        
+        ArrayList<Service> serviceList = serviceController.getAllServices();
+        
+        for(Service service : serviceList){
+            Object[] row = {service.getServiceId(), service.getName(), service.getDescription(), service.getPrice(), service.getStatus()};
+            model.addRow(row);
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton btnActive;
