@@ -4,7 +4,6 @@
  */
 package groomify.model;
 
-import com.mysql.cj.jdbc.PreparedStatementWrapper;
 import groomify.db.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

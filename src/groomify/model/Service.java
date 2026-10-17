@@ -11,17 +11,23 @@ package groomify.model;
 public class Service {
     private int serviceId;
     private String name;
+    private String description;
     private double price;
+    private String status;
 
-    public Service(int serviceId, String name, double price) {
+    public Service(int serviceId, String name, String description, double price, String status) {
         this.serviceId = serviceId;
         this.name = name;
+        this.description = description;
         this.price = price;
+        this.status = status;
     }
 
-    public Service(String name, double price) {
+    public Service(String name, String description, double price, String status) {
         this.name = name;
+        this.description = description;
         this.price = price;
+        this.status = status;
     }
 
     public int getServiceId() {
@@ -47,4 +53,22 @@ public class Service {
     public void setPrice(double price) {
         this.price = price;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    
+    
 }

@@ -6,6 +6,9 @@ package groomify.view;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatLightLaf;
+import groomify.controller.OwnerController;
+import groomify.model.Owner;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -16,15 +19,22 @@ public class PanelOwners extends javax.swing.JPanel {
     /**
      * Creates new form PanelOwners
      */
+    
+    private OwnerController ownerController;
+    private int selectedOwnerId;
+    
     public PanelOwners() {
+        
+        ownerController = new OwnerController();
+        
         FlatLightLaf.setup();
         
         initComponents();
         
         panelOwnerBox.putClientProperty(FlatClientProperties.STYLE, "arc: 30");
-        btnAdd.putClientProperty("FlatLaf.style", "arc: 25");
-        btnUpdate.putClientProperty("FlatLaf.style", "arc: 25");
-        btnDelete.putClientProperty("FlatLaf.style", "arc: 25");
+        btnAddOwner.putClientProperty("FlatLaf.style", "arc: 25");
+        btnUpdateOwner.putClientProperty("FlatLaf.style", "arc: 25");
+        btnDeleteOwner.putClientProperty("FlatLaf.style", "arc: 25");
         btnClear.putClientProperty("FlatLaf.style", "arc: 25");
     }
 
@@ -59,10 +69,11 @@ public class PanelOwners extends javax.swing.JPanel {
         pnlAddressField = new javax.swing.JPanel();
         lblLocationIcon = new javax.swing.JLabel();
         txtAddress = new javax.swing.JTextField();
-        btnAdd = new javax.swing.JButton();
-        btnUpdate = new javax.swing.JButton();
+        btnAddOwner = new javax.swing.JButton();
+        btnUpdateOwner = new javax.swing.JButton();
         btnClear = new javax.swing.JButton();
-        btnDelete = new javax.swing.JButton();
+        btnDeleteOwner = new javax.swing.JButton();
+        lblError = new javax.swing.JLabel();
         pnlSearchBox = new javax.swing.JPanel();
         lblSearchIcon = new javax.swing.JLabel();
         txtSearch = new javax.swing.JTextField();
@@ -83,15 +94,20 @@ public class PanelOwners extends javax.swing.JPanel {
 
         tblOwners.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Owner", "Contact", "Pets"
+                "owner_id", "Owner", "Contact", "Pets"
             }
         ));
+        tblOwners.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblOwnersMouseClicked(evt);
+            }
+        });
         scrollPaneOwners.setViewportView(tblOwners);
 
         add(scrollPaneOwners, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, -1, -1));
@@ -184,33 +200,42 @@ public class PanelOwners extends javax.swing.JPanel {
 
         panelOwnerBox.add(pnlAddressField, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 288, 280, 40));
 
-        btnAdd.setBackground(new java.awt.Color(244, 184, 96));
-        btnAdd.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        btnAdd.setForeground(new java.awt.Color(43, 35, 32));
-        btnAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/plus_18.png"))); // NOI18N
-        btnAdd.setText("Add owner");
-        btnAdd.setIconTextGap(10);
-        btnAdd.addActionListener(this::btnAddActionPerformed);
-        panelOwnerBox.add(btnAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 360, 280, 40));
+        btnAddOwner.setBackground(new java.awt.Color(244, 184, 96));
+        btnAddOwner.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        btnAddOwner.setForeground(new java.awt.Color(43, 35, 32));
+        btnAddOwner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/plus_18.png"))); // NOI18N
+        btnAddOwner.setText("Add owner");
+        btnAddOwner.setIconTextGap(10);
+        btnAddOwner.addActionListener(this::btnAddOwnerActionPerformed);
+        panelOwnerBox.add(btnAddOwner, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 375, 280, 40));
 
-        btnUpdate.setBackground(new java.awt.Color(254, 243, 199));
-        btnUpdate.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnUpdate.setForeground(new java.awt.Color(146, 64, 14));
-        btnUpdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/pencil_18.png"))); // NOI18N
-        btnUpdate.setText("Update");
-        panelOwnerBox.add(btnUpdate, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 425, 95, 40));
+        btnUpdateOwner.setBackground(new java.awt.Color(254, 243, 199));
+        btnUpdateOwner.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnUpdateOwner.setForeground(new java.awt.Color(146, 64, 14));
+        btnUpdateOwner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/pencil_18.png"))); // NOI18N
+        btnUpdateOwner.setText("Update");
+        btnUpdateOwner.addActionListener(this::btnUpdateOwnerActionPerformed);
+        panelOwnerBox.add(btnUpdateOwner, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 435, 95, 40));
 
         btnClear.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnClear.setForeground(new java.awt.Color(141, 91, 58));
         btnClear.setText("Clear");
-        panelOwnerBox.add(btnClear, new org.netbeans.lib.awtextra.AbsoluteConstraints(125, 425, 70, 40));
+        btnClear.addActionListener(this::btnClearActionPerformed);
+        panelOwnerBox.add(btnClear, new org.netbeans.lib.awtextra.AbsoluteConstraints(125, 435, 70, 40));
 
-        btnDelete.setBackground(new java.awt.Color(254, 226, 226));
-        btnDelete.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnDelete.setForeground(new java.awt.Color(153, 27, 27));
-        btnDelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/trash_18.png"))); // NOI18N
-        btnDelete.setText("Delete");
-        panelOwnerBox.add(btnDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(205, 425, 90, 40));
+        btnDeleteOwner.setBackground(new java.awt.Color(254, 226, 226));
+        btnDeleteOwner.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnDeleteOwner.setForeground(new java.awt.Color(153, 27, 27));
+        btnDeleteOwner.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/trash_18.png"))); // NOI18N
+        btnDeleteOwner.setText("Delete");
+        btnDeleteOwner.addActionListener(this::btnDeleteOwnerActionPerformed);
+        panelOwnerBox.add(btnDeleteOwner, new org.netbeans.lib.awtextra.AbsoluteConstraints(205, 435, 90, 40));
+
+        lblError.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblError.setForeground(new java.awt.Color(163, 45, 45));
+        lblError.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblError.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        panelOwnerBox.add(lblError, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 345, 280, -1));
 
         add(panelOwnerBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 170, 320, 500));
 
@@ -232,21 +257,63 @@ public class PanelOwners extends javax.swing.JPanel {
         add(pnlSearchBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 100, 500, 40));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnAddActionPerformed
+    private void btnAddOwnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddOwnerActionPerformed
+        if(txtName.getText().isEmpty() || txtContact.getText().isEmpty() || txtAddress.getText().isEmpty() || txtEmail.getText().isEmpty()){
+            lblError.setText("Please fill all the fields");
+        }else{
+            Owner owner = new Owner(txtName.getText(), txtContact.getText(), txtAddress.getText(), txtEmail.getText());
+            
+            boolean isSuccess = ownerController.addOwner(owner);
+            
+            if(isSuccess){
+                JOptionPane.showMessageDialog(null, "Owner saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(null, "Failed to add the owner!", "Failed", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnAddOwnerActionPerformed
 
+    private void btnUpdateOwnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateOwnerActionPerformed
+        
+    }//GEN-LAST:event_btnUpdateOwnerActionPerformed
 
+    private void tblOwnersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblOwnersMouseClicked
+        int selectedRow = tblOwners.getSelectedRow();
+        
+        if(selectedRow >= 0){
+            selectedOwnerId = Integer.parseInt(tblOwners.getValueAt(selectedRow, 0).toString());
+            lblError.setText(String.valueOf(selectedRow));
+        }
+        
+    }//GEN-LAST:event_tblOwnersMouseClicked
+
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        clearFields();
+    }//GEN-LAST:event_btnClearActionPerformed
+
+    private void btnDeleteOwnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteOwnerActionPerformed
+        
+    }//GEN-LAST:event_btnDeleteOwnerActionPerformed
+
+    private void clearFields(){
+        txtSearch.setText("");
+        txtName.setText("");
+        txtContact.setText("");
+        txtAddress.setText("");
+        txtEmail.setText("");
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnAddOwner;
     private javax.swing.JButton btnClear;
-    private javax.swing.JButton btnDelete;
-    private javax.swing.JButton btnUpdate;
+    private javax.swing.JButton btnDeleteOwner;
+    private javax.swing.JButton btnUpdateOwner;
     private javax.swing.JLabel lblAddress;
     private javax.swing.JLabel lblContact;
     private javax.swing.JLabel lblContactIcon;
     private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblEmailIcon;
+    private javax.swing.JLabel lblError;
     private javax.swing.JLabel lblLocationIcon;
     private javax.swing.JLabel lblName;
     private javax.swing.JLabel lblOwnerDetails;

@@ -102,7 +102,6 @@ public class PanelBilling extends javax.swing.JPanel {
         panelInvoiceBox.add(lblPetName, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 48, -1, -1));
 
         lblTot.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        lblTot.setForeground(new java.awt.Color(0, 0, 0));
         lblTot.setText("Total");
         panelInvoiceBox.add(lblTot, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 260, -1, -1));
 
@@ -112,7 +111,6 @@ public class PanelBilling extends javax.swing.JPanel {
         pnlTotalField.setLayout(new java.awt.BorderLayout());
 
         lblLocationIcon.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        lblLocationIcon.setForeground(new java.awt.Color(0, 0, 0));
         lblLocationIcon.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblLocationIcon.setText("LKR : ");
         lblLocationIcon.setPreferredSize(new java.awt.Dimension(60, 40));
