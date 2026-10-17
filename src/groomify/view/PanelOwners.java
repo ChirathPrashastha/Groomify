@@ -8,6 +8,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatLightLaf;
 import groomify.controller.OwnerController;
 import groomify.model.Owner;
+import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -156,10 +157,12 @@ public class PanelOwners extends javax.swing.JPanel {
 
         lblContactIcon.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblContactIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/phone_18.png"))); // NOI18N
+        lblContactIcon.setIconTextGap(5);
         lblContactIcon.setPreferredSize(new java.awt.Dimension(40, 40));
         pnlContactField.add(lblContactIcon, java.awt.BorderLayout.LINE_START);
 
         txtContact.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtContact.setText("+94");
         txtContact.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         pnlContactField.add(txtContact, java.awt.BorderLayout.CENTER);
 
@@ -266,17 +269,19 @@ public class PanelOwners extends javax.swing.JPanel {
         if(txtName.getText().isEmpty() || txtContact.getText().isEmpty() || txtAddress.getText().isEmpty() || txtEmail.getText().isEmpty()){
             lblError.setText("Please fill all the fields");
         }else{
-            Owner owner = new Owner(txtName.getText(), txtContact.getText(), txtAddress.getText(), txtEmail.getText());
+            if(validateFields()){
+                Owner owner = new Owner(txtName.getText(), txtContact.getText(), txtAddress.getText(), txtEmail.getText());
             
-            boolean isSuccess = ownerController.addOwner(owner);
+                boolean isSuccess = ownerController.addOwner(owner);
             
-            if(isSuccess){
-                JOptionPane.showMessageDialog(null, "Owner saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                if(isSuccess){
+                    JOptionPane.showMessageDialog(null, "Owner saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 
-                loadTable();
-                clearFields();
-            }else{
-                JOptionPane.showMessageDialog(null, "Failed to add the owner!", "Failed", JOptionPane.ERROR_MESSAGE);
+                    loadTable();
+                    clearFields();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Failed to add the owner!", "Failed", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }//GEN-LAST:event_btnAddOwnerActionPerformed
@@ -288,17 +293,20 @@ public class PanelOwners extends javax.swing.JPanel {
             lblError.setText("Please fill all the fields");
         }else{
             
-            Owner owner = new Owner(selectedOwnerId, txtName.getText(), txtContact.getText(), txtAddress.getText(), txtEmail.getText());
+            if(validateFields()){
+                Owner owner = new Owner(selectedOwnerId, txtName.getText(), txtContact.getText(), txtAddress.getText(), txtEmail.getText());
             
             boolean isSuccess = ownerController.updateOwner(owner);
             
-            if(isSuccess){
-                JOptionPane.showMessageDialog(null, "Owner updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                if(isSuccess){
+                    JOptionPane.showMessageDialog(null, "Owner updated successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
                 
-                loadTable();
-                clearFields();
-            }else{
-                JOptionPane.showMessageDialog(null, "Failed to update the owner!", "Failed", JOptionPane.ERROR_MESSAGE);
+                    loadTable();
+                    clearFields();
+                    selectedOwnerId = 0;
+                }else{
+                    JOptionPane.showMessageDialog(null, "Failed to update the owner!", "Failed", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }//GEN-LAST:event_btnUpdateOwnerActionPerformed
@@ -324,7 +332,7 @@ public class PanelOwners extends javax.swing.JPanel {
 
     private void btnDeleteOwnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteOwnerActionPerformed
         if(selectedOwnerId == 0){
-            JOptionPane.showMessageDialog(null, "Please select the row that needed to update", "Infromation", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Please select the row that needed to delete", "Infromation", JOptionPane.INFORMATION_MESSAGE);
         }else{
             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to remove owner ID : " + selectedOwnerId + " permanently ?", "Confirmation", JOptionPane.YES_NO_OPTION);
             
@@ -362,9 +370,32 @@ public class PanelOwners extends javax.swing.JPanel {
     private void clearFields(){
         txtSearch.setText("");
         txtName.setText("");
-        txtContact.setText("");
+        txtContact.setText("+94");
         txtAddress.setText("");
         txtEmail.setText("");
+        lblError.setText("");
+    }
+    
+    private boolean validateFields(){
+        if(txtContact.getText().matches("\\+?[0-9]+") == false || txtContact.getText().length() != 12 || txtContact.getText().length() != 12){
+            txtContact.setForeground(new Color(163,45,45));
+            lblError.setText("Please enter a valid contact number");
+            
+            return false;
+        }else{
+            txtContact.setForeground(Color.BLACK);
+        }
+        
+        if(txtEmail.getText().contains("@") == false || txtEmail.getText().contains(".") == false){
+            txtEmail.setForeground(new Color(163,45,45));
+            lblError.setText("Please enter a valid email");
+            
+            return false;
+        }else{
+            txtEmail.setForeground(Color.BLACK);
+        }
+        
+        return true;
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
