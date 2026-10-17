@@ -4,8 +4,9 @@
  */
 package groomify.view;
 
-import java.awt.CardLayout;
+import java.awt.BorderLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 
 
 /**
@@ -27,6 +28,7 @@ public class FrameDashboard extends javax.swing.JFrame {
             setIconImage(new ImageIcon(getClass().getResource("/groomify/util/img/logo_badge_36.png")).getImage());
         
             btnDashboard.setSelected(true);
+            showPanel(new PanelDashboard());
             
         }else if(role.equals("RECEPTIONIST")){
             initComponents();
@@ -35,7 +37,7 @@ public class FrameDashboard extends javax.swing.JFrame {
             
             btnDashboard.setEnabled(false);
             
-            showPage("appointments");
+            showPanel(new PanelAppointments());
             btnAppointment.setSelected(true);
         }
     }
@@ -61,12 +63,6 @@ public class FrameDashboard extends javax.swing.JFrame {
         btnBilling = new groomify.view.RoundedToggleButton();
         btnLogout = new groomify.view.RoundedToggleButton();
         pnlContent = new javax.swing.JPanel();
-        dashboard = new groomify.view.PanelDashboard();
-        appointment = new groomify.view.PanelAppointments();
-        owner = new groomify.view.PanelOwners();
-        pet = new groomify.view.PanelPets();
-        service = new groomify.view.PanelServices();
-        billing = new groomify.view.PanelBilling();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Groomify");
@@ -141,14 +137,7 @@ public class FrameDashboard extends javax.swing.JFrame {
 
         pnlContent.setBackground(new java.awt.Color(251, 246, 240));
         pnlContent.setPreferredSize(new java.awt.Dimension(890, 700));
-        pnlContent.setLayout(new java.awt.CardLayout());
-        pnlContent.add(dashboard, "dashboard");
-        pnlContent.add(appointment, "appointments");
-        pnlContent.add(owner, "owners");
-        pnlContent.add(pet, "pets");
-        pnlContent.add(service, "services");
-        pnlContent.add(billing, "billings");
-
+        pnlContent.setLayout(new java.awt.BorderLayout());
         getContentPane().add(pnlContent, java.awt.BorderLayout.CENTER);
 
         pack();
@@ -156,11 +145,11 @@ public class FrameDashboard extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDashboardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDashboardActionPerformed
-        showPage("dashboard");
+        showPanel(new PanelDashboard());
     }//GEN-LAST:event_btnDashboardActionPerformed
 
     private void btnOwnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOwnerActionPerformed
-        showPage("owners");
+        showPanel(new PanelOwners());
     }//GEN-LAST:event_btnOwnerActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
@@ -170,24 +159,26 @@ public class FrameDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void btnAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAppointmentActionPerformed
-        showPage("appointments");
+        showPanel(new PanelAppointments());
     }//GEN-LAST:event_btnAppointmentActionPerformed
 
     private void btnPetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPetActionPerformed
-        showPage("pets");
+        showPanel(new PanelPets());
     }//GEN-LAST:event_btnPetActionPerformed
 
     private void btnServiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnServiceActionPerformed
-        showPage("services");
+        showPanel(new PanelServices());
     }//GEN-LAST:event_btnServiceActionPerformed
 
     private void btnBillingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBillingActionPerformed
-        showPage("billings");
+        showPanel(new PanelBilling());
     }//GEN-LAST:event_btnBillingActionPerformed
 
-    private void showPage(String card) {
-        CardLayout layout = (CardLayout) pnlContent.getLayout();
-        layout.show(pnlContent, card);
+    private void showPanel(JPanel panel) {
+        pnlContent.removeAll();
+        pnlContent.add(panel, BorderLayout.CENTER);
+        pnlContent.revalidate();
+        pnlContent.repaint();
     }
     
     /**
@@ -219,8 +210,6 @@ public class FrameDashboard extends javax.swing.JFrame {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private groomify.view.PanelAppointments appointment;
-    private groomify.view.PanelBilling billing;
     private groomify.view.RoundedToggleButton btnAppointment;
     private groomify.view.RoundedToggleButton btnBilling;
     private groomify.view.RoundedToggleButton btnDashboard;
@@ -229,13 +218,9 @@ public class FrameDashboard extends javax.swing.JFrame {
     private groomify.view.RoundedToggleButton btnOwner;
     private groomify.view.RoundedToggleButton btnPet;
     private groomify.view.RoundedToggleButton btnService;
-    private groomify.view.PanelDashboard dashboard;
     private javax.swing.JLabel lblBrandName;
     private javax.swing.JLabel lblIcon;
-    private groomify.view.PanelOwners owner;
-    private groomify.view.PanelPets pet;
     private javax.swing.JPanel pnlContent;
     private javax.swing.JPanel pnlSideBar;
-    private groomify.view.PanelServices service;
     // End of variables declaration//GEN-END:variables
 }
