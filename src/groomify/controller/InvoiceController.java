@@ -34,4 +34,8 @@ public class InvoiceController {
     public ArrayList<Invoice> getAllInvoices(){
         return invoiceDAO.getAllInvoices();
     }
+    
+    public boolean markAsPaid(Invoice invoice){
+        return invoiceDAO.markAsPaid(invoice);
+    }
 }

@@ -92,7 +92,7 @@ public class InvoiceDAO {
             ResultSet rst = statement.executeQuery();
             
             while(rst.next()){
-                invoiceList.add(new Invoice(rst.getInt("invoicec_id"), rst.getInt("appointment_id"), rst.getDouble("total"), rst.getString("payement_method"), rst.getString("status")));
+                invoiceList.add(new Invoice(rst.getInt("invoice_id"), rst.getInt("appointment_id"), rst.getDouble("total"), rst.getString("payment_method"), rst.getString("status")));
             }
             
             return invoiceList;
@@ -102,5 +102,24 @@ public class InvoiceDAO {
         }
         
         return null;
+    }
+    
+    public boolean markAsPaid(Invoice invoice){
+        try{
+            
+            String sql = "UPDATE invoices SET payment_method=?, status='PAID' WHERE invoice_id=?";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            statement.setString(1, invoice.getPaymentMethod());
+            statement.setInt(2, invoice.getInvoiceId());
+            
+            return statement.executeUpdate() > 0;
+                    
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return false;
     }
 }

@@ -6,17 +6,37 @@ package groomify.view;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatLightLaf;
+import groomify.controller.AppointmentServiceController;
+import groomify.controller.InvoiceController;
+import groomify.controller.ServiceController;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import groomify.model.Invoice;
+import groomify.model.AppointmentService;
+import groomify.model.Service;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Chirath
  */
 public class PanelBilling extends javax.swing.JPanel {
+    
+    private InvoiceController invoiceController;
+    private AppointmentServiceController appointmentServiceController;
+    private ServiceController serviceController;
+    private Invoice selectedInvoice;
+    private DefaultTableModel modelAppServiceTbl;
 
     /**
      * Creates new form PanelBilling
      */
     public PanelBilling() {
+        
+        invoiceController = new InvoiceController();
+        appointmentServiceController = new AppointmentServiceController();
+        serviceController = new ServiceController();
+        
         FlatLightLaf.setup();
         
         initComponents();
@@ -26,6 +46,8 @@ public class PanelBilling extends javax.swing.JPanel {
         btnMarkAsPaid.putClientProperty("FlatLaf.style", "arc: 25");
         btnCash.putClientProperty("FlatLaf.style", "arc: 30");
         btnCard.putClientProperty("FlatLaf.style", "arc: 30");
+        
+        loadInvoiceTable();
     }
 
     /**
@@ -44,19 +66,15 @@ public class PanelBilling extends javax.swing.JPanel {
         tblInvoices = new javax.swing.JTable();
         panelInvoiceBox = new javax.swing.JPanel();
         lblInvoiceId = new javax.swing.JLabel();
-        lblPetName = new javax.swing.JLabel();
         lblTot = new javax.swing.JLabel();
-        pnlTotalField = new javax.swing.JPanel();
-        lblLocationIcon = new javax.swing.JLabel();
-        lblTotalValue = new javax.swing.JLabel();
         btnMarkAsPaid = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        lblOwnerName = new javax.swing.JLabel();
-        lblDate = new javax.swing.JLabel();
-        lblServvices = new javax.swing.JLabel();
+        lblStatus = new javax.swing.JLabel();
         lblPayMethod = new javax.swing.JLabel();
         btnCash = new javax.swing.JToggleButton();
         btnCard = new javax.swing.JToggleButton();
+        lblTotalValue = new javax.swing.JLabel();
+        scrollPaneAppServices = new javax.swing.JScrollPane();
+        tblAppServices = new javax.swing.JTable();
         pnlSearchBox = new javax.swing.JPanel();
         lblSearchIcon = new javax.swing.JLabel();
         txtSearch = new javax.swing.JTextField();
@@ -83,45 +101,29 @@ public class PanelBilling extends javax.swing.JPanel {
                 {null, null, null, null, null}
             },
             new String [] {
-                "Invoice", "Owner", "Date", "Total", "Status"
+                "Invoice", "Appointment", "Total", "Payment method", "Status"
             }
         ));
+        tblInvoices.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblInvoiceMouseClicked(evt);
+            }
+        });
         scrollPaneInvoices.setViewportView(tblInvoices);
 
-        add(scrollPaneInvoices, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, -1, -1));
+        add(scrollPaneInvoices, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 168, -1, 504));
 
         panelInvoiceBox.setBackground(new java.awt.Color(255, 255, 255));
         panelInvoiceBox.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lblInvoiceId.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        lblInvoiceId.setText("Invoice INV - 001");
-        panelInvoiceBox.add(lblInvoiceId, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 16, -1, -1));
-
-        lblPetName.setForeground(new java.awt.Color(122, 110, 102));
-        lblPetName.setText("Max");
-        panelInvoiceBox.add(lblPetName, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 48, -1, -1));
+        lblInvoiceId.setText("Invoice INV");
+        panelInvoiceBox.add(lblInvoiceId, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 25, -1, -1));
 
         lblTot.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        lblTot.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lblTot.setText("Total");
-        panelInvoiceBox.add(lblTot, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 260, -1, -1));
-
-        pnlTotalField.setBackground(new java.awt.Color(255, 255, 255));
-        pnlTotalField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(227, 205, 182), 1, true));
-        pnlTotalField.setPreferredSize(new java.awt.Dimension(40, 40));
-        pnlTotalField.setLayout(new java.awt.BorderLayout());
-
-        lblLocationIcon.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        lblLocationIcon.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblLocationIcon.setText("LKR : ");
-        lblLocationIcon.setPreferredSize(new java.awt.Dimension(60, 40));
-        pnlTotalField.add(lblLocationIcon, java.awt.BorderLayout.LINE_START);
-
-        lblTotalValue.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        lblTotalValue.setText("5600.00");
-        lblTotalValue.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        pnlTotalField.add(lblTotalValue, java.awt.BorderLayout.CENTER);
-
-        panelInvoiceBox.add(pnlTotalField, new org.netbeans.lib.awtextra.AbsoluteConstraints(145, 250, 150, 40));
+        panelInvoiceBox.add(lblTot, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 300, 90, 38));
 
         btnMarkAsPaid.setBackground(new java.awt.Color(244, 184, 96));
         btnMarkAsPaid.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
@@ -129,30 +131,16 @@ public class PanelBilling extends javax.swing.JPanel {
         btnMarkAsPaid.setText("Mark as paid");
         btnMarkAsPaid.setIconTextGap(10);
         btnMarkAsPaid.addActionListener(this::btnMarkAsPaidActionPerformed);
-        panelInvoiceBox.add(btnMarkAsPaid, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 430, 285, 40));
+        panelInvoiceBox.add(btnMarkAsPaid, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 430, 285, 40));
 
-        jLabel1.setBackground(new java.awt.Color(254, 243, 199));
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(146, 64, 14));
-        jLabel1.setText("Pending");
-        panelInvoiceBox.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 18, -1, -1));
-
-        lblOwnerName.setForeground(new java.awt.Color(122, 110, 102));
-        lblOwnerName.setText("John R.");
-        panelInvoiceBox.add(lblOwnerName, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 48, -1, -1));
-
-        lblDate.setForeground(new java.awt.Color(122, 110, 102));
-        lblDate.setText("2026 Oct 05");
-        panelInvoiceBox.add(lblDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 68, -1, -1));
-
-        lblServvices.setForeground(new java.awt.Color(122, 110, 102));
-        lblServvices.setText("Nail cutting        1000.00");
-        lblServvices.setToolTipText("");
-        panelInvoiceBox.add(lblServvices, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 100, -1, -1));
+        lblStatus.setBackground(new java.awt.Color(254, 243, 199));
+        lblStatus.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        lblStatus.setForeground(new java.awt.Color(146, 64, 14));
+        panelInvoiceBox.add(lblStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(237, 28, -1, -1));
 
         lblPayMethod.setForeground(new java.awt.Color(122, 110, 102));
         lblPayMethod.setText("Payment method");
-        panelInvoiceBox.add(lblPayMethod, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 350, -1, -1));
+        panelInvoiceBox.add(lblPayMethod, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 350, -1, -1));
 
         btnCash.setBackground(new java.awt.Color(245, 233, 220));
         groupPayMethod.add(btnCash);
@@ -160,7 +148,7 @@ public class PanelBilling extends javax.swing.JPanel {
         btnCash.setForeground(new java.awt.Color(141, 91, 58));
         btnCash.setText("Cash");
         btnCash.setBorder(null);
-        panelInvoiceBox.add(btnCash, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 375, 135, 32));
+        panelInvoiceBox.add(btnCash, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 375, 135, 32));
 
         btnCard.setBackground(new java.awt.Color(245, 233, 220));
         groupPayMethod.add(btnCard);
@@ -169,6 +157,35 @@ public class PanelBilling extends javax.swing.JPanel {
         btnCard.setText("Card");
         btnCard.setBorder(null);
         panelInvoiceBox.add(btnCard, new org.netbeans.lib.awtextra.AbsoluteConstraints(163, 375, 135, 32));
+
+        lblTotalValue.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        lblTotalValue.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTotalValue.setText("LKR");
+        lblTotalValue.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        panelInvoiceBox.add(lblTotalValue, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 300, 90, 38));
+
+        tblAppServices.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Service", "Price"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        scrollPaneAppServices.setViewportView(tblAppServices);
+
+        panelInvoiceBox.add(scrollPaneAppServices, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 280, 230));
 
         add(panelInvoiceBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 170, 320, 500));
 
@@ -191,32 +208,110 @@ public class PanelBilling extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnMarkAsPaidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMarkAsPaidActionPerformed
-        // TODO add your handling code here:
+        if(selectedInvoice == null){
+            JOptionPane.showMessageDialog(null, "Please select the invoice that needed to pay", "Information", JOptionPane.INFORMATION_MESSAGE);
+        }else if(btnCash.isSelected() == false && btnCard.isSelected() == false){
+            JOptionPane.showMessageDialog(null, "Please select the payment method", "Information", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            
+            if(btnCash.isSelected()){
+                selectedInvoice.setPaymentMethod("CASH");
+            }else if(btnCard.isSelected()){
+                selectedInvoice.setPaymentMethod("CARD");
+            }
+            
+            boolean isMarked = invoiceController.markAsPaid(selectedInvoice);
+            
+            if(isMarked){
+                JOptionPane.showMessageDialog(null, "Payment saved successfully!", "Information", JOptionPane.INFORMATION_MESSAGE);
+                
+                loadInvoiceTable();
+                clearFields();
+            }else{
+                JOptionPane.showMessageDialog(null, "Failed to save the payment", "Information", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_btnMarkAsPaidActionPerformed
 
+    private void tblInvoiceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblInvoiceMouseClicked
+        int selectedRow = tblInvoices.getSelectedRow();
+        
+        selectedInvoice = new Invoice(
+                Integer.parseInt(tblInvoices.getValueAt(selectedRow, 0).toString()), 
+                Integer.parseInt(tblInvoices.getValueAt(selectedRow, 1).toString()), 
+                Double.parseDouble(tblInvoices.getValueAt(selectedRow, 2).toString()), 
+                tblInvoices.getValueAt(selectedRow, 3).toString(), 
+                tblInvoices.getValueAt(selectedRow, 4).toString()
+        );
+        
+        lblInvoiceId.setText("Invoice INV - " + selectedInvoice.getInvoiceId());
+        lblTotalValue.setText("LKR: " + selectedInvoice.getTotal());
+        if(selectedInvoice.getPaymentMethod().equals("CARD")){
+            btnCard.setSelected(true);
+            btnMarkAsPaid.setEnabled(false);
+        }else if(selectedInvoice.getPaymentMethod().equals("CASH")){
+            btnCash.setSelected(true);
+            btnMarkAsPaid.setEnabled(false);
+        }
+        
+        loadAppointmentServiceTable();
+    }//GEN-LAST:event_tblInvoiceMouseClicked
 
+    private void loadInvoiceTable(){
+        DefaultTableModel modelInoviceTbl = (DefaultTableModel)tblInvoices.getModel();
+        
+        modelInoviceTbl.setRowCount(0);
+        
+        ArrayList<Invoice> invoiceList = invoiceController.getAllInvoices();
+        
+        for(Invoice invoice : invoiceList){
+            Object[] row = {invoice.getInvoiceId(), invoice.getAppointmentId(), invoice.getTotal(), invoice.getPaymentMethod(), invoice.getStatus()};
+            modelInoviceTbl.addRow(row);
+        }
+    }
+    
+    private void loadAppointmentServiceTable(){
+        modelAppServiceTbl = (DefaultTableModel)tblAppServices.getModel();
+        
+        modelAppServiceTbl.setRowCount(0);
+        
+        ArrayList<AppointmentService> appServiceList = appointmentServiceController.getServicesOfAppointment(selectedInvoice.getAppointmentId());
+        
+        for(AppointmentService appService : appServiceList){
+            Service service = serviceController.searchServiceById(appService.getServiceId());
+            
+            Object[] row = {service.getName(), appService.getPrice()};
+            modelAppServiceTbl.addRow(row);
+        }
+    }
+    
+    private void clearFields(){
+        lblInvoiceId.setText("Inovice INV");
+        modelAppServiceTbl.setRowCount(0);
+        selectedInvoice = null;
+        lblTotalValue.setText("LKR: ");
+        groupPayMethod.clearSelection();
+        btnMarkAsPaid.setEnabled(true);
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton btnCard;
     private javax.swing.JToggleButton btnCash;
     private javax.swing.JButton btnMarkAsPaid;
     private javax.swing.ButtonGroup groupPayMethod;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel lblDate;
     private javax.swing.JLabel lblInvoiceId;
-    private javax.swing.JLabel lblLocationIcon;
-    private javax.swing.JLabel lblOwnerName;
     private javax.swing.JLabel lblPayMethod;
-    private javax.swing.JLabel lblPetName;
     private javax.swing.JLabel lblSearchIcon;
-    private javax.swing.JLabel lblServvices;
+    private javax.swing.JLabel lblStatus;
     private javax.swing.JLabel lblSubTitile;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblTot;
     private javax.swing.JLabel lblTotalValue;
     private javax.swing.JPanel panelInvoiceBox;
     private javax.swing.JPanel pnlSearchBox;
-    private javax.swing.JPanel pnlTotalField;
+    private javax.swing.JScrollPane scrollPaneAppServices;
     private javax.swing.JScrollPane scrollPaneInvoices;
+    private javax.swing.JTable tblAppServices;
     private javax.swing.JTable tblInvoices;
     private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
