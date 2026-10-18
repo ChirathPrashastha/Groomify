@@ -23,10 +23,9 @@ public class Invoice {
         this.status = status;
     }
 
-    public Invoice(int appointmentId, double total, String paymentMethod, String status) {
+    public Invoice(int appointmentId, double total, String status) {
         this.appointmentId = appointmentId;
         this.total = total;
-        this.paymentMethod = paymentMethod;
         this.status = status;
     }
 

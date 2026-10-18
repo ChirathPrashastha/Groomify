@@ -30,7 +30,7 @@ public class InvoiceDAO {
             
             statement.setInt(1, invoice.getAppointmentId());
             statement.setDouble(2, invoice.getTotal());
-            statement.setString(3, invoice.getPaymentMethod());
+            statement.setString(3, "PENDING");
             statement.setString(4, invoice.getStatus());
             
             return statement.executeUpdate() > 0;
@@ -42,18 +42,15 @@ public class InvoiceDAO {
         return false;
     }
     
-    public boolean updateInvoice(Invoice invoice){
+    public boolean updateInvoice(double total, int appId){
         try{
             
-            String sql = "UPDATE invoices SET appointment_id=? , total=? , payment_method=? status=? WHERE invoice_id=?";
+            String sql = "UPDATE invoices SET total=? WHERE appointment_id=?";
             
             PreparedStatement statement = connection.prepareStatement(sql);
             
-            statement.setInt(1, invoice.getAppointmentId());
-            statement.setDouble(2, invoice.getTotal());
-            statement.setString(3, invoice.getPaymentMethod());
-            statement.setString(4, invoice.getStatus());
-            statement.setInt(5, invoice.getInvoiceId());
+            statement.setDouble(1, total);
+            statement.setInt(2, appId);
             
             return statement.executeUpdate() > 0;
                     

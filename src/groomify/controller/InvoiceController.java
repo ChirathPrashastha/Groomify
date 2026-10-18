@@ -23,8 +23,8 @@ public class InvoiceController {
         return invoiceDAO.addInvoice(invoice);
     }
     
-    public boolean updateInvoice(Invoice invoice){
-        return invoiceDAO.updateInvoice(invoice);
+    public boolean updateInvoice(double  tot, int appId){
+        return invoiceDAO.updateInvoice(tot, appId);
     }
     
     public boolean deleteInvoice(int invoiceId){

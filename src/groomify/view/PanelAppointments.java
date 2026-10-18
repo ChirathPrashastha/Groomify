@@ -7,6 +7,7 @@ package groomify.view;
 import com.formdev.flatlaf.FlatLightLaf;
 import groomify.controller.AppointmentController;
 import groomify.controller.AppointmentServiceController;
+import groomify.controller.InvoiceController;
 import groomify.controller.PetController;
 import groomify.controller.ServiceController;
 import groomify.model.Appointment;
@@ -19,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import javax.swing.table.DefaultTableModel;
 import groomify.model.AppointmentService;
+import groomify.model.Invoice;
 import javax.swing.JOptionPane;
 
 /**
@@ -33,6 +35,7 @@ public class PanelAppointments extends javax.swing.JPanel {
     
     private AppointmentController appointmentController;
     private AppointmentServiceController appServiceController;
+    private InvoiceController invoiceController;
     
     private PetController petController;
     private ServiceController serviceController;
@@ -59,6 +62,7 @@ public class PanelAppointments extends javax.swing.JPanel {
         
         appointmentController = new AppointmentController();
         appServiceController = new AppointmentServiceController();
+        invoiceController = new InvoiceController();
         
         petController = new PetController();
         serviceController = new ServiceController();
@@ -392,7 +396,7 @@ public class PanelAppointments extends javax.swing.JPanel {
 
     private void btnUpdateAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateAppointmentActionPerformed
         if(cmbPet.getSelectedIndex()==0 || tblServices.getRowCount() == 0 || txtBookingDate.getText().isEmpty() || txtBookingTime.getText().isEmpty()){
-            JOptionPane.showMessageDialog(null, "Please fill all the fields", "Information", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Please fill all the fields or select the row that needed to update", "Information", JOptionPane.INFORMATION_MESSAGE);
         }else{
             
             int index = cmbPet.getSelectedIndex() - 1;
@@ -410,6 +414,8 @@ public class PanelAppointments extends javax.swing.JPanel {
 
                 boolean isDeleted = appServiceController.deleteAppointmentService(updatableAppointment.getAppointmentId());
 
+                double totalAmount = 0.0;
+                
                 //adding the updated record
                 for(Service service : selectedServicesList){
                     AppointmentService appService = new AppointmentService(updatableAppointment.getAppointmentId(), service.getServiceId(), service.getPrice());
@@ -420,12 +426,21 @@ public class PanelAppointments extends javax.swing.JPanel {
                         JOptionPane.showMessageDialog(null, "Unbale to add the updated appointment_service record", "Failed", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
+                    
+                    totalAmount += service.getPrice();
                 }
                 
-                JOptionPane.showMessageDialog(null, "Appointment updated successfully!", "Information", JOptionPane.INFORMATION_MESSAGE);
+                boolean isInvoiceUpdated = invoiceController.updateInvoice(totalAmount, updatableAppointment.getAppointmentId());
                 
-                loadAppointmentTable();
-                clearFields();
+                if(isInvoiceUpdated){
+                    JOptionPane.showMessageDialog(null, "Appointment updated successfully!", "Information", JOptionPane.INFORMATION_MESSAGE);
+                
+                    loadAppointmentTable();
+                    clearFields();
+                }else{
+                    JOptionPane.showMessageDialog(null, "Faild to update the invoice", "Failed", JOptionPane.ERROR_MESSAGE);
+                }
+
             }else{
                 JOptionPane.showMessageDialog(null, "Faild the appointment updation", "Failed", JOptionPane.ERROR_MESSAGE);
             }
@@ -484,6 +499,7 @@ public class PanelAppointments extends javax.swing.JPanel {
     public void saveAppointmentServices(){
         
         int appId = appointmentController.getLastAppointmentId();
+        double totalAmount = 0.0;
         
         if(appId != 0){
             for(Service service : selectedServicesList){
@@ -496,14 +512,21 @@ public class PanelAppointments extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(null, "Unbale to save appointment_service", "Failed", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+                
+                totalAmount += service.getPrice();
             }
             
+            boolean isInvoiceSaved = invoiceController.addInvoice(new Invoice(appId, totalAmount, "PENDING"));
+        
+            if(isInvoiceSaved){
+                JOptionPane.showMessageDialog(null, "Booking added successfully!", "Information", JOptionPane.INFORMATION_MESSAGE);
+        
+                loadAppointmentTable();
+                clearFields();
+            }else{
+                JOptionPane.showMessageDialog(null, "Failed to save the invoice", "Failed", JOptionPane.ERROR_MESSAGE);
+            }
         }
-        
-        JOptionPane.showMessageDialog(null, "Booking added successfully!", "Information", JOptionPane.INFORMATION_MESSAGE);
-        
-        loadAppointmentTable();
-        clearFields();
     }
     
     private void btnAddServiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddServiceActionPerformed
@@ -647,7 +670,7 @@ public class PanelAppointments extends javax.swing.JPanel {
         btnAddAppointment.setEnabled(true);
         
         updatableAppointment = null;
-        updatableServiceList.clear();
+        updatableServiceList = null;
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
