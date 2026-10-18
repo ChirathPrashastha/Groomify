@@ -39,4 +39,8 @@ public class ServiceController {
     public Service searchServiceByName(String name){
         return serviceDAO.searchServiceByName(name);
     }
+    
+    public Service searchServiceById(int serviceId){
+        return serviceDAO.searchServiceById(serviceId);
+    }
 }

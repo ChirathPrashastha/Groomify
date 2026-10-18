@@ -4,6 +4,7 @@
  */
 package groomify.view;
 
+import groomify.model.User;
 import java.awt.BorderLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -16,13 +17,17 @@ import javax.swing.JPanel;
 public class FrameDashboard extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FrameDashboard.class.getName());
+    
+    private User loggedUser;
 
     /**
      * Creates new form FrameDashboard
      */
 
-    public FrameDashboard(String role) {
-        if(role.equals("ADMIN")){
+    public FrameDashboard(User user) {
+        loggedUser = user;
+        
+        if(user.getRole().equals("ADMIN")){
             initComponents();
         
             setIconImage(new ImageIcon(getClass().getResource("/groomify/util/img/logo_badge_36.png")).getImage());
@@ -30,14 +35,14 @@ public class FrameDashboard extends javax.swing.JFrame {
             btnDashboard.setSelected(true);
             showPanel(new PanelDashboard());
             
-        }else if(role.equals("RECEPTIONIST")){
+        }else if(user.getRole().equals("RECEPTIONIST")){
             initComponents();
         
             setIconImage(new ImageIcon(getClass().getResource("/groomify/util/img/logo_badge_36.png")).getImage());
             
             btnDashboard.setEnabled(false);
             
-            showPanel(new PanelAppointments());
+            showPanel(new PanelAppointments(loggedUser));
             btnAppointment.setSelected(true);
         }
     }
@@ -159,7 +164,7 @@ public class FrameDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void btnAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAppointmentActionPerformed
-        showPanel(new PanelAppointments());
+        showPanel(new PanelAppointments(loggedUser));
     }//GEN-LAST:event_btnAppointmentActionPerformed
 
     private void btnPetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPetActionPerformed

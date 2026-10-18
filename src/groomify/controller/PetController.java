@@ -4,6 +4,7 @@
  */
 package groomify.controller;
 
+import groomify.model.CustomPetAndOwner;
 import groomify.model.PetDAO;
 import groomify.model.Pet;
 import java.util.ArrayList;
@@ -37,5 +38,17 @@ public class PetController {
     
     public Pet searchPetByName(String name){
         return petDAO.searchPetByName(name);
+    }
+    
+    public Pet getPetByPetAndOwnerNames(String petName, String ownerName){
+        return petDAO.getPetByPetAndOwnerNames(petName, ownerName);
+    }
+    
+    public ArrayList<CustomPetAndOwner> getAllPetAndOwnerNames(){
+        return petDAO.getAllPetNamesAndOwnerNames();
+    }
+    
+    public CustomPetAndOwner getPetAndOwnerNameByPetId(int petId){
+        return petDAO.getPetAndOwnerNameByPetId(petId);
     }
 }

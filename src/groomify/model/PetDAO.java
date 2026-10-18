@@ -126,4 +126,72 @@ public class PetDAO {
         
         return null;
     }
+    
+    public Pet getPetByPetAndOwnerNames(String petName, String ownerName){
+        try{
+            String sql = "SELECT * FROM pets JOIN owners ON pets.owner_id = owners.owner_id WHERE pets.name=? AND owners.full_name=?";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            statement.setString(1, petName);
+            statement.setString(2, ownerName);
+            
+            ResultSet rst = statement.executeQuery();
+            
+            if(rst.next()){
+                return new Pet(rst.getInt("pet_id"), rst.getString("name"), rst.getString("species"), rst.getString("breed"), rst.getString("coat_type"), rst.getInt("owner_id"));
+            }
+            
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return null;
+    }
+    
+    public ArrayList<CustomPetAndOwner> getAllPetNamesAndOwnerNames(){
+        
+        ArrayList<CustomPetAndOwner> petAndOwnerList = new ArrayList<>();
+        
+        try{
+            
+            String sql = "SELECT pets.name, owners.full_name FROM pets JOIN owners ON pets.owner_id = owners.owner_id";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            ResultSet rst = statement.executeQuery();
+            
+            while(rst.next()){
+                petAndOwnerList.add(new CustomPetAndOwner(rst.getString("name"), rst.getString("full_name")));
+            }
+            
+            return petAndOwnerList;
+            
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return null;
+    }
+    
+    public CustomPetAndOwner getPetAndOwnerNameByPetId(int petId){
+        try{
+            
+            String sql = "SELECT pets.name, owners.full_name FROM pets JOIN owners ON pets.owner_id = owners.owner_id WHERE pets.pet_id=?";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, petId);
+            
+            ResultSet rst = statement.executeQuery();
+            
+            if(rst.next()){
+                return new CustomPetAndOwner(rst.getString("name"), rst.getString("full_name"));
+            }
+            
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return null;
+    }
 }

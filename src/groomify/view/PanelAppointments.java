@@ -5,6 +5,21 @@
 package groomify.view;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import groomify.controller.AppointmentController;
+import groomify.controller.AppointmentServiceController;
+import groomify.controller.PetController;
+import groomify.controller.ServiceController;
+import groomify.model.Appointment;
+import groomify.model.CustomPetAndOwner;
+import groomify.model.Pet;
+import java.util.ArrayList;
+import groomify.model.Service;
+import groomify.model.User;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import javax.swing.table.DefaultTableModel;
+import groomify.model.AppointmentService;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -15,21 +30,79 @@ public class PanelAppointments extends javax.swing.JPanel {
     /**
      * Creates new form PanelAppointments
      */
-    public PanelAppointments() {
+    
+    private AppointmentController appointmentController;
+    private AppointmentServiceController appServiceController;
+    
+    private PetController petController;
+    private ServiceController serviceController;
+    private ArrayList<CustomPetAndOwner> petsAndOwnersNameList;
+    private ArrayList<Service> serviceList;
+    
+    private ArrayList<Service> selectedServicesList;
+    
+//    private ArrayList<AppointmentService> selectedAppAndServiceList;
+    
+    private DefaultTableModel modelService;
+    
+    private User loggedUser;
+    
+    private CustomPetAndOwner selectedPetAndOwner;
+    private Pet selectedPet;
+    
+    private Appointment updatableAppointment;
+    private ArrayList<AppointmentService> updatableServiceList;
+    
+    public PanelAppointments(User user) {
+        
+        loggedUser = user;
+        
+        appointmentController = new AppointmentController();
+        appServiceController = new AppointmentServiceController();
+        
+        petController = new PetController();
+        serviceController = new ServiceController();
+        
         initComponents();
+        
+        loadAppointmentTable();
+        
+        modelService = (DefaultTableModel)tblServices.getModel();
+        modelService.setRowCount(0);
+        selectedServicesList = new ArrayList<>();
         
         FlatLightLaf.setup();
         
         btnAddAppointment.putClientProperty("FlatLaf.style", "arc: 20");
         btnScheduled.putClientProperty("FlatLaf.style", "arc: 30");
-        btnInProgress.putClientProperty("FlatLaf.style", "arc: 30");
         btnCompleted.putClientProperty("FlatLaf.style", "arc: 30");
         btnCancelled.putClientProperty("FlatLaf.style", "arc: 30");
-        btnUpdate.putClientProperty("FlatLaf.style", "arc: 20");
-        btnStart.putClientProperty("FlatLaf.style", "arc: 20");
+        btnUpdateAppointment.putClientProperty("FlatLaf.style", "arc: 20");
         btnComplete.putClientProperty("FlatLaf.style", "arc: 20");
-        btnCancelBooking.putClientProperty("FlatLaf.style", "arc: 20");
-        btnGenerateBill.putClientProperty("FlatLaf.style", "arc: 20");
+        btnClear.putClientProperty("FlatLaf.style", "arc: 20");
+        btnCancelAppointment.putClientProperty("FlatLaf.style", "arc: 20");
+        pnlAppBox.putClientProperty("FlatLaf.style", "arc: 30");
+        btnAddService.putClientProperty("FlatLaf.style", "arc: 20");
+        
+        //loading pet and owner names for cmb
+        cmbPet.removeAllItems();
+        cmbPet.addItem("Select pet");
+        
+        petsAndOwnersNameList = petController.getAllPetAndOwnerNames();
+        for(CustomPetAndOwner po : petsAndOwnersNameList){
+            cmbPet.addItem(po.getPetName() + " | " + po.getOwnerName());
+        }
+        
+        //loading the services for cmb
+        cmbService.removeAllItems();
+        cmbService.addItem("Select a service");
+        
+        serviceList = serviceController.getAllServices();
+        for(Service service : serviceList){
+            cmbService.addItem(service.getName());
+        }
+        
+
     }
 
     /**
@@ -44,7 +117,6 @@ public class PanelAppointments extends javax.swing.JPanel {
         groupStatus = new javax.swing.ButtonGroup();
         lblTitle = new javax.swing.JLabel();
         lblSubTitile = new javax.swing.JLabel();
-        btnAddAppointment = new javax.swing.JButton();
         pnlSearchBox = new javax.swing.JPanel();
         lblSearchIcon = new javax.swing.JLabel();
         txtSearch = new javax.swing.JTextField();
@@ -52,16 +124,30 @@ public class PanelAppointments extends javax.swing.JPanel {
         lblDateIcon = new javax.swing.JLabel();
         txtDate = new javax.swing.JTextField();
         btnScheduled = new javax.swing.JToggleButton();
-        btnInProgress = new javax.swing.JToggleButton();
         btnCompleted = new javax.swing.JToggleButton();
         btnCancelled = new javax.swing.JToggleButton();
         scrollPaneAppointments = new javax.swing.JScrollPane();
         tblAppointments = new javax.swing.JTable();
-        btnUpdate = new javax.swing.JButton();
-        btnStart = new javax.swing.JButton();
         btnComplete = new javax.swing.JButton();
-        btnCancelBooking = new javax.swing.JButton();
-        btnGenerateBill = new javax.swing.JButton();
+        pnlAppBox = new javax.swing.JPanel();
+        lblTitle1 = new javax.swing.JLabel();
+        lblSubTitile1 = new javax.swing.JLabel();
+        lblOwner = new javax.swing.JLabel();
+        cmbPet = new javax.swing.JComboBox<>();
+        lblDate = new javax.swing.JLabel();
+        txtBookingDate = new javax.swing.JTextField();
+        btnAddService = new javax.swing.JButton();
+        txtBookingTime = new javax.swing.JTextField();
+        lblTime = new javax.swing.JLabel();
+        cmbService = new javax.swing.JComboBox<>();
+        lblService = new javax.swing.JLabel();
+        btnAddAppointment = new javax.swing.JButton();
+        lblTotal = new javax.swing.JLabel();
+        scrollPaneServices = new javax.swing.JScrollPane();
+        tblServices = new javax.swing.JTable();
+        btnUpdateAppointment = new javax.swing.JButton();
+        btnClear = new javax.swing.JButton();
+        btnCancelAppointment = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(251, 246, 240));
         setForeground(new java.awt.Color(146, 64, 14));
@@ -76,14 +162,6 @@ public class PanelAppointments extends javax.swing.JPanel {
         lblSubTitile.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         lblSubTitile.setText("Manage bookings and daily schedule");
         add(lblSubTitile, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 56, -1, -1));
-
-        btnAddAppointment.setBackground(new java.awt.Color(244, 184, 96));
-        btnAddAppointment.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        btnAddAppointment.setForeground(new java.awt.Color(43, 35, 32));
-        btnAddAppointment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/plus_18.png"))); // NOI18N
-        btnAddAppointment.setText("New appointment");
-        btnAddAppointment.setIconTextGap(10);
-        add(btnAddAppointment, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 28, 172, 40));
 
         pnlSearchBox.setBackground(new java.awt.Color(255, 255, 255));
         pnlSearchBox.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(227, 205, 182)));
@@ -127,62 +205,39 @@ public class PanelAppointments extends javax.swing.JPanel {
         btnScheduled.setBorder(null);
         add(btnScheduled, new org.netbeans.lib.awtextra.AbsoluteConstraints(477, 104, 88, 32));
 
-        btnInProgress.setBackground(new java.awt.Color(254, 243, 199));
-        groupStatus.add(btnInProgress);
-        btnInProgress.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnInProgress.setForeground(new java.awt.Color(146, 64, 14));
-        btnInProgress.setBorder(null);
-        btnInProgress.setLabel("In progress");
-        add(btnInProgress, new org.netbeans.lib.awtextra.AbsoluteConstraints(573, 104, 96, 32));
-
         btnCompleted.setBackground(new java.awt.Color(220, 252, 231));
         groupStatus.add(btnCompleted);
         btnCompleted.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnCompleted.setForeground(new java.awt.Color(22, 101, 52));
         btnCompleted.setText("Completed");
-        add(btnCompleted, new org.netbeans.lib.awtextra.AbsoluteConstraints(677, 104, 92, 32));
+        add(btnCompleted, new org.netbeans.lib.awtextra.AbsoluteConstraints(573, 104, 92, 32));
 
         btnCancelled.setBackground(new java.awt.Color(254, 226, 226));
         groupStatus.add(btnCancelled);
         btnCancelled.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnCancelled.setForeground(new java.awt.Color(153, 27, 27));
         btnCancelled.setText("Cancelled");
-        add(btnCancelled, new org.netbeans.lib.awtextra.AbsoluteConstraints(777, 104, 88, 32));
+        add(btnCancelled, new org.netbeans.lib.awtextra.AbsoluteConstraints(677, 104, 88, 32));
 
         tblAppointments.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Time", "Pet", "Owner", "Service", "Status"
+                "Appointment Id", "Pet ID", "Date", "Time", "Status", "Created  by"
             }
         ));
+        tblAppointments.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblAppointmentMouseClicked(evt);
+            }
+        });
         scrollPaneAppointments.setViewportView(tblAppointments);
 
-        add(scrollPaneAppointments, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 160, 834, 440));
-
-        btnUpdate.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        btnUpdate.setForeground(new java.awt.Color(141, 91, 58));
-        btnUpdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/pencil_18.png"))); // NOI18N
-        btnUpdate.setText("Edit");
-        btnUpdate.setBorder(null);
-        btnUpdate.setFocusable(false);
-        btnUpdate.setIconTextGap(11);
-        btnUpdate.setInheritsPopupMenu(true);
-        add(btnUpdate, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 616, 90, 40));
-
-        btnStart.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        btnStart.setForeground(new java.awt.Color(141, 91, 58));
-        btnStart.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/play_18.png"))); // NOI18N
-        btnStart.setText("Start");
-        btnStart.setBorder(null);
-        btnStart.setFocusable(false);
-        btnStart.setIconTextGap(11);
-        btnStart.setInheritsPopupMenu(true);
-        add(btnStart, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 616, 90, 40));
+        add(scrollPaneAppointments, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 160, 433, 465));
 
         btnComplete.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         btnComplete.setForeground(new java.awt.Color(141, 91, 58));
@@ -192,51 +247,442 @@ public class PanelAppointments extends javax.swing.JPanel {
         btnComplete.setIconTextGap(10);
         btnComplete.setInheritsPopupMenu(true);
         btnComplete.setLabel("Complete");
-        add(btnComplete, new org.netbeans.lib.awtextra.AbsoluteConstraints(232, 616, 120, 40));
+        btnComplete.addActionListener(this::btnCompleteActionPerformed);
+        add(btnComplete, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 640, 120, 40));
 
-        btnCancelBooking.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        btnCancelBooking.setForeground(new java.awt.Color(163, 45, 45));
-        btnCancelBooking.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/x_18.png"))); // NOI18N
-        btnCancelBooking.setBorder(null);
-        btnCancelBooking.setFocusable(false);
-        btnCancelBooking.setIconTextGap(10);
-        btnCancelBooking.setInheritsPopupMenu(true);
-        btnCancelBooking.setLabel("Cancel booking");
-        add(btnCancelBooking, new org.netbeans.lib.awtextra.AbsoluteConstraints(704, 616, 158, 40));
+        pnlAppBox.setBackground(new java.awt.Color(255, 255, 255));
+        pnlAppBox.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        btnGenerateBill.setBackground(new java.awt.Color(244, 184, 96));
-        btnGenerateBill.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        btnGenerateBill.setForeground(new java.awt.Color(59, 36, 16));
-        btnGenerateBill.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/receipt_18.png"))); // NOI18N
-        btnGenerateBill.setText("Generate bill");
-        btnGenerateBill.setBorder(null);
-        btnGenerateBill.setFocusable(false);
-        btnGenerateBill.setIconTextGap(10);
-        btnGenerateBill.setInheritsPopupMenu(true);
-        add(btnGenerateBill, new org.netbeans.lib.awtextra.AbsoluteConstraints(365, 616, 140, 40));
+        lblTitle1.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
+        lblTitle1.setForeground(new java.awt.Color(43, 35, 32));
+        lblTitle1.setText("Manage appointment");
+        pnlAppBox.add(lblTitle1, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 20, -1, -1));
+
+        lblSubTitile1.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        lblSubTitile1.setForeground(new java.awt.Color(122, 110, 102));
+        lblSubTitile1.setText("Book, edit or cancel the bookings");
+        pnlAppBox.add(lblSubTitile1, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 51, -1, -1));
+
+        lblOwner.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        lblOwner.setForeground(new java.awt.Color(122, 110, 102));
+        lblOwner.setText("Pet");
+        pnlAppBox.add(lblOwner, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 85, -1, -1));
+
+        cmbPet.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        cmbPet.setForeground(new java.awt.Color(122, 110, 102));
+        cmbPet.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select pet" }));
+        cmbPet.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(227, 205, 182)));
+        cmbPet.addActionListener(this::cmbPetActionPerformed);
+        pnlAppBox.add(cmbPet, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 105, 340, 30));
+
+        lblDate.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        lblDate.setForeground(new java.awt.Color(122, 110, 102));
+        lblDate.setText("Date");
+        pnlAppBox.add(lblDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 145, -1, -1));
+
+        txtBookingDate.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtBookingDate.setText("YYYY/MM/DD");
+        txtBookingDate.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(227, 205, 182)));
+        txtBookingDate.setMargin(new java.awt.Insets(2, 10, 2, 6));
+        pnlAppBox.add(txtBookingDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 165, 160, 30));
+
+        btnAddService.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnAddService.setForeground(new java.awt.Color(141, 91, 58));
+        btnAddService.setText("Add");
+        btnAddService.addActionListener(this::btnAddServiceActionPerformed);
+        pnlAppBox.add(btnAddService, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 222, 94, 33));
+
+        txtBookingTime.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtBookingTime.setText("HH/MM");
+        txtBookingTime.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(227, 205, 182)));
+        txtBookingTime.setMargin(new java.awt.Insets(2, 10, 2, 6));
+        pnlAppBox.add(txtBookingTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(203, 165, 160, 30));
+
+        lblTime.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        lblTime.setForeground(new java.awt.Color(122, 110, 102));
+        lblTime.setText("Time");
+        pnlAppBox.add(lblTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(203, 145, -1, -1));
+
+        cmbService.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        cmbService.setForeground(new java.awt.Color(122, 110, 102));
+        cmbService.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select a service" }));
+        cmbService.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(227, 205, 182)));
+        cmbService.addActionListener(this::cmbServiceActionPerformed);
+        pnlAppBox.add(cmbService, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 225, 235, 30));
+
+        lblService.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        lblService.setForeground(new java.awt.Color(122, 110, 102));
+        lblService.setText("Select service");
+        pnlAppBox.add(lblService, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 205, -1, -1));
+
+        btnAddAppointment.setBackground(new java.awt.Color(244, 184, 96));
+        btnAddAppointment.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        btnAddAppointment.setForeground(new java.awt.Color(43, 35, 32));
+        btnAddAppointment.setText("Book appointment");
+        btnAddAppointment.setActionCommand("Book appointment");
+        btnAddAppointment.setIconTextGap(10);
+        btnAddAppointment.addActionListener(this::btnAddAppointmentActionPerformed);
+        pnlAppBox.add(btnAddAppointment, new org.netbeans.lib.awtextra.AbsoluteConstraints(195, 405, 170, 40));
+
+        lblTotal.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblTotal.setForeground(new java.awt.Color(43, 35, 32));
+        lblTotal.setText("LKR: ");
+        pnlAppBox.add(lblTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(26, 412, -1, -1));
+
+        tblServices.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Service ID", "Service", "Name"
+            }
+        ));
+        tblServices.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblServicesMouseClicked(evt);
+            }
+        });
+        scrollPaneServices.setViewportView(tblServices);
+
+        pnlAppBox.add(scrollPaneServices, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 265, 342, 120));
+
+        add(pnlAppBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(478, 160, 385, 465));
+
+        btnUpdateAppointment.setBackground(new java.awt.Color(254, 243, 199));
+        btnUpdateAppointment.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnUpdateAppointment.setForeground(new java.awt.Color(146, 64, 14));
+        btnUpdateAppointment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/pencil_18.png"))); // NOI18N
+        btnUpdateAppointment.setText("Update");
+        btnUpdateAppointment.setIconTextGap(10);
+        btnUpdateAppointment.addActionListener(this::btnUpdateAppointmentActionPerformed);
+        add(btnUpdateAppointment, new org.netbeans.lib.awtextra.AbsoluteConstraints(477, 640, 130, 40));
+
+        btnClear.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnClear.setForeground(new java.awt.Color(141, 91, 58));
+        btnClear.setText("Clear");
+        btnClear.addActionListener(this::btnClearActionPerformed);
+        add(btnClear, new org.netbeans.lib.awtextra.AbsoluteConstraints(616, 640, 90, 40));
+
+        btnCancelAppointment.setBackground(new java.awt.Color(254, 226, 226));
+        btnCancelAppointment.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnCancelAppointment.setForeground(new java.awt.Color(153, 27, 27));
+        btnCancelAppointment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/x_18.png"))); // NOI18N
+        btnCancelAppointment.setText("Cancel booking");
+        btnCancelAppointment.setIconTextGap(10);
+        btnCancelAppointment.addActionListener(this::btnCancelAppointmentActionPerformed);
+        add(btnCancelAppointment, new org.netbeans.lib.awtextra.AbsoluteConstraints(715, 640, 150, 40));
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cmbPetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPetActionPerformed
+//        if(cmbPet.getSelectedIndex() > 0){
+//            selectedOwnerId = ownerController.getOwnerIdbyOwnerName(cmbPet.getSelectedItem().toString());
+//
+//            if(selectedOwnerId != 0){
+//                lblOwner.setText("Owner ID: " + selectedOwnerId);
+//            }
+//        }
+    }//GEN-LAST:event_cmbPetActionPerformed
 
+    private void cmbServiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbServiceActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbServiceActionPerformed
+
+    private void btnUpdateAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateAppointmentActionPerformed
+        if(cmbPet.getSelectedIndex()==0 || tblServices.getRowCount() == 0 || txtBookingDate.getText().isEmpty() || txtBookingTime.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Please fill all the fields", "Information", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            
+            int index = cmbPet.getSelectedIndex() - 1;
+            selectedPetAndOwner = petsAndOwnersNameList.get(index);
+        
+            selectedPet = petController.getPetByPetAndOwnerNames(selectedPetAndOwner.getPetName(), selectedPetAndOwner.getOwnerName());
+            
+            Appointment booking = new Appointment(updatableAppointment.getAppointmentId(), selectedPet.getPetId(), LocalDate.parse(txtBookingDate.getText()), LocalTime.parse(txtBookingTime.getText()),"SCHEDULED", loggedUser.getId());
+            
+            boolean isAppointmentUpdated = appointmentController.updateAppointment(booking);
+            
+            if(isAppointmentUpdated){
+                
+                //clearing the previous appointment_services record before updating
+
+                boolean isDeleted = appServiceController.deleteAppointmentService(updatableAppointment.getAppointmentId());
+
+                //adding the updated record
+                for(Service service : selectedServicesList){
+                    AppointmentService appService = new AppointmentService(updatableAppointment.getAppointmentId(), service.getServiceId(), service.getPrice());
+                    
+                    boolean isAdded = appServiceController.addAppointmentService(appService);
+                    
+                    if(!isAdded){
+                        JOptionPane.showMessageDialog(null, "Unbale to add the updated appointment_service record", "Failed", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+                
+                JOptionPane.showMessageDialog(null, "Appointment updated successfully!", "Information", JOptionPane.INFORMATION_MESSAGE);
+                
+                loadAppointmentTable();
+                clearFields();
+            }else{
+                JOptionPane.showMessageDialog(null, "Faild the appointment updation", "Failed", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnUpdateAppointmentActionPerformed
+
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        clearFields();
+    }//GEN-LAST:event_btnClearActionPerformed
+
+    private void btnCancelAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelAppointmentActionPerformed
+        if(updatableAppointment == null){
+            JOptionPane.showMessageDialog(null, "Please select the appointment that wanted to be cancelled", "Information", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            boolean isCanceled = appointmentController.cancelAppointment(updatableAppointment.getAppointmentId());
+            
+            if(isCanceled){
+                JOptionPane.showMessageDialog(null, "Appointment cancelled successfully!", "Information", JOptionPane.INFORMATION_MESSAGE);
+                
+                loadAppointmentTable();
+                clearFields();
+            }else{
+                JOptionPane.showMessageDialog(null, "Appointment cancelation failed", "Failed", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnCancelAppointmentActionPerformed
+
+    private void btnAddAppointmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddAppointmentActionPerformed
+        
+        if(cmbPet.getSelectedIndex()==0 || tblServices.getRowCount() == 0 || txtBookingDate.getText().isEmpty() || txtBookingTime.getText().isEmpty()){
+            
+            JOptionPane.showMessageDialog(null, "Please fill all the fields", "Information", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            int index = cmbPet.getSelectedIndex() - 1;
+            selectedPetAndOwner = petsAndOwnersNameList.get(index);
+        
+            selectedPet = petController.getPetByPetAndOwnerNames(selectedPetAndOwner.getPetName(), selectedPetAndOwner.getOwnerName());
+        
+            if(selectedPet != null){
+                Appointment booking = new Appointment(selectedPet.getPetId(), LocalDate.parse(txtBookingDate.getText()), LocalTime.parse(txtBookingTime.getText()),"SCHEDULED", loggedUser.getId());
+                
+                boolean isAppAddSuccess = appointmentController.addAppointment(booking); // saving the appointment
+                
+                if(isAppAddSuccess){
+                    saveAppointmentServices(); // saving the appointmet_services
+                }else{
+                    JOptionPane.showMessageDialog(null, "Failed to save the booking in appointments!", "Failed", JOptionPane.ERROR_MESSAGE);
+                }
+                
+            }else{
+                JOptionPane.showMessageDialog(null, "Unbale to find the selected pet", "Failed", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnAddAppointmentActionPerformed
+
+    public void saveAppointmentServices(){
+        
+        int appId = appointmentController.getLastAppointmentId();
+        
+        if(appId != 0){
+            for(Service service : selectedServicesList){
+                
+                AppointmentService appService = new AppointmentService(appId, service.getServiceId(), service.getPrice());
+                
+                boolean isSuccess = appServiceController.addAppointmentService(appService);
+                
+                if(!isSuccess){
+                    JOptionPane.showMessageDialog(null, "Unbale to save appointment_service", "Failed", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+            
+        }
+        
+        JOptionPane.showMessageDialog(null, "Booking added successfully!", "Information", JOptionPane.INFORMATION_MESSAGE);
+        
+        loadAppointmentTable();
+        clearFields();
+    }
+    
+    private void btnAddServiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddServiceActionPerformed
+        
+        if(cmbService.getSelectedIndex() == 0){
+            JOptionPane.showMessageDialog(null, "Please select a valid service", "Information", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            int selectedIndex = cmbService.getSelectedIndex() - 1;
+        
+            addServiceToTable(selectedIndex); //for UI table
+        
+            selectedServicesList.add(serviceList.get(selectedIndex)); // for DB table
+        
+            calculateTotal();
+        }
+    }//GEN-LAST:event_btnAddServiceActionPerformed
+
+    private void calculateTotal(){
+        double tot = 0.0;
+            for(Service service : selectedServicesList){
+                tot += service.getPrice();
+            }
+        
+            lblTotal.setText("LKR: " + tot);
+    }
+    
+    private void tblServicesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblServicesMouseClicked
+        
+        int selectedRow = tblServices.getSelectedRow();
+        int selectedServiceId = Integer.parseInt(tblServices.getValueAt(selectedRow, 0).toString());
+        
+        int result = JOptionPane.showConfirmDialog(null, "Do you want to remove " + tblServices.getValueAt(selectedRow, 1).toString() + " from the booking?", "Confirmation", JOptionPane.YES_NO_OPTION);
+            
+        if(result == JOptionPane.YES_OPTION){
+            modelService.removeRow(selectedRow);
+        
+            for(int i=0; i < selectedServicesList.size(); i++){
+                if(selectedServicesList.get(i).getServiceId() == selectedServiceId){
+                        selectedServicesList.remove(i);
+                        calculateTotal();
+                }
+            }
+                
+        }
+
+    }//GEN-LAST:event_tblServicesMouseClicked
+
+    private void tblAppointmentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAppointmentMouseClicked
+        
+        btnAddAppointment.setEnabled(false);
+        
+        int selectedRow = tblAppointments.getSelectedRow();
+        
+        updatableAppointment = new Appointment(
+                Integer.parseInt(tblAppointments.getValueAt(selectedRow, 0).toString()),
+                Integer.parseInt(tblAppointments.getValueAt(selectedRow, 1).toString()),
+                LocalDate.parse(tblAppointments.getValueAt(selectedRow, 2).toString()), 
+                LocalTime.parse(tblAppointments.getValueAt(selectedRow, 3).toString()),
+                tblAppointments.getValueAt(selectedRow, 4).toString(), 
+                Integer.parseInt(tblAppointments.getValueAt(selectedRow, 5).toString())
+        );
+        
+        CustomPetAndOwner petAndOwner = petController.getPetAndOwnerNameByPetId(updatableAppointment.getPetId());
+        
+        if(petAndOwner != null){
+            cmbPet.setSelectedItem(petAndOwner.getPetName() + " | " + petAndOwner.getOwnerName());
+        }else{
+            System.out.println("Missing petandowner");
+        }
+        
+        txtBookingDate.setText(updatableAppointment.getDate().toString());
+        txtBookingTime.setText(updatableAppointment.getTime().toString());
+        
+        updatableServiceList = appServiceController.getServicesOfAppointment(updatableAppointment.getAppointmentId());
+        
+        if(updatableServiceList != null){
+            selectedServicesList.clear();
+            
+            modelService.setRowCount(0);
+            
+            for(AppointmentService appService : updatableServiceList){
+                Service service = serviceController.searchServiceById(appService.getServiceId());
+                selectedServicesList.add(service);
+                
+                Object[] row = {service.getServiceId(), service.getName(), service.getPrice()};
+                modelService.addRow(row);
+            }
+            
+            calculateTotal();
+        }
+    }//GEN-LAST:event_tblAppointmentMouseClicked
+
+    private void btnCompleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompleteActionPerformed
+        if(updatableAppointment == null){
+            JOptionPane.showMessageDialog(null, "Please select the appointment that completed", "Information", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            boolean isCompleted = appointmentController.completeAppointment(updatableAppointment.getAppointmentId());
+            
+            if(isCompleted){
+                JOptionPane.showMessageDialog(null, "Appointment marked as completed successfully!", "Information", JOptionPane.INFORMATION_MESSAGE);
+                
+                loadAppointmentTable();
+                clearFields();
+            }else{
+                JOptionPane.showMessageDialog(null, "Appointment completion recording failed", "Failed", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnCompleteActionPerformed
+
+    private void addServiceToTable(int index){
+        
+        Object[] row = {serviceList.get(index).getServiceId(), serviceList.get(index).getName(), serviceList.get(index).getPrice()};
+        
+        modelService.addRow(row);
+    }
+
+    private void loadAppointmentTable(){
+        DefaultTableModel modelAppointment = (DefaultTableModel)tblAppointments.getModel();
+        
+        modelAppointment.setRowCount(0);
+        
+        ArrayList<Appointment> appointmentList = appointmentController.getAllAppointments();
+        
+        for(Appointment app : appointmentList){
+            Object[] row = {app.getAppointmentId(), app.getPetId(), app.getDate(), app.getTime(), app.getStatus(), app.getCreatedBy()};
+            modelAppointment.addRow(row);
+        }
+    }
+    
+    private void clearFields(){
+        cmbPet.setSelectedIndex(0);
+        cmbService.setSelectedIndex(0);
+        txtBookingDate.setText("");
+        txtBookingTime.setText("");
+        lblTotal.setText("LKR: ");
+        
+        modelService.setRowCount(0);
+        selectedServicesList.clear();
+        selectedPet = null;
+        selectedPetAndOwner = null;
+        btnAddAppointment.setEnabled(true);
+        
+        updatableAppointment = null;
+        updatableServiceList.clear();
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddAppointment;
-    private javax.swing.JButton btnCancelBooking;
+    private javax.swing.JButton btnAddService;
+    private javax.swing.JButton btnCancelAppointment;
     private javax.swing.JToggleButton btnCancelled;
+    private javax.swing.JButton btnClear;
     private javax.swing.JButton btnComplete;
     private javax.swing.JToggleButton btnCompleted;
-    private javax.swing.JButton btnGenerateBill;
-    private javax.swing.JToggleButton btnInProgress;
     private javax.swing.JToggleButton btnScheduled;
-    private javax.swing.JButton btnStart;
-    private javax.swing.JButton btnUpdate;
+    private javax.swing.JButton btnUpdateAppointment;
+    private javax.swing.JComboBox<String> cmbPet;
+    private javax.swing.JComboBox<String> cmbService;
     private javax.swing.ButtonGroup groupStatus;
+    private javax.swing.JLabel lblDate;
     private javax.swing.JLabel lblDateIcon;
+    private javax.swing.JLabel lblOwner;
     private javax.swing.JLabel lblSearchIcon;
+    private javax.swing.JLabel lblService;
     private javax.swing.JLabel lblSubTitile;
+    private javax.swing.JLabel lblSubTitile1;
+    private javax.swing.JLabel lblTime;
     private javax.swing.JLabel lblTitle;
+    private javax.swing.JLabel lblTitle1;
+    private javax.swing.JLabel lblTotal;
+    private javax.swing.JPanel pnlAppBox;
     private javax.swing.JPanel pnlDateBox;
     private javax.swing.JPanel pnlSearchBox;
     private javax.swing.JScrollPane scrollPaneAppointments;
+    private javax.swing.JScrollPane scrollPaneServices;
     private javax.swing.JTable tblAppointments;
+    private javax.swing.JTable tblServices;
+    private javax.swing.JTextField txtBookingDate;
+    private javax.swing.JTextField txtBookingTime;
     private javax.swing.JTextField txtDate;
     private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables

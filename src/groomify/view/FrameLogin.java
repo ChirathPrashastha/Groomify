@@ -289,11 +289,11 @@ public class FrameLogin extends javax.swing.JFrame {
                 String role = user.getRole();
                 
                 if(role.equals("ADMIN")){
-                    FrameDashboard dashboard = new FrameDashboard("ADMIN");
+                    FrameDashboard dashboard = new FrameDashboard(user);
                     dashboard.setVisible(true);
                     this.dispose();
                 }else if(role.equals("RECEPTIONIST")){
-                    FrameDashboard dashboard = new FrameDashboard("RECEPTIONIST");
+                    FrameDashboard dashboard = new FrameDashboard(user);
                     dashboard.setVisible(true);
                     this.dispose();
                 }

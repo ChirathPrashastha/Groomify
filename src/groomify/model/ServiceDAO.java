@@ -127,4 +127,26 @@ public class ServiceDAO {
         
         return null;
     }
+    
+    public Service searchServiceById(int serviceId){
+        try{
+            
+            String sql = "SELECT * FROM services WHERE service_id=?";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            statement.setInt(1, serviceId);
+            
+            ResultSet rst = statement.executeQuery();
+            
+            if(rst.next()){
+                return new Service(rst.getInt("service_id"), rst.getString("name"), rst.getString("description"), rst.getDouble("price"), rst.getString("status"));
+            }
+            
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return null;
+    }
 }
