@@ -106,6 +106,29 @@ public class ServiceDAO {
         return null;
     }
     
+    public Service seachService(Object id){
+        try{
+            
+            String sql = "SELECT * FROM services WHERE service_id=? OR name LIKE ?";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            statement.setObject(1, id);
+            statement.setObject(2, id + "%");
+            
+            ResultSet rst = statement.executeQuery();
+            
+            if(rst.next()){
+                return new Service(rst.getInt("service_id"), rst.getString("name"), rst.getString("description"), rst.getDouble("price"), rst.getString("status"));
+            }
+            
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return null;
+    }
+    
     public Service searchServiceByName(String name){
         try{
             

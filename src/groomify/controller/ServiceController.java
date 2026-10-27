@@ -32,6 +32,10 @@ public class ServiceController {
         return serviceDAO.deleteService(serviceId);
     }
     
+    public Service searchService(Object id){
+        return serviceDAO.seachService(id);
+    }
+    
     public ArrayList<Service> getAllServices(){
         return serviceDAO.getAllServices();
     }

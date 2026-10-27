@@ -32,6 +32,10 @@ public class PetController {
         return petDAO.deletePet(petId);
     }
     
+    public Pet searchPet(Object id){
+        return petDAO.searchPet(id);
+    }
+    
     public ArrayList<Pet> getAllPets(){
         return petDAO.getAllPets();
     }

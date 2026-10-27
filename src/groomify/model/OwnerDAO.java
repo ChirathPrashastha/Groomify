@@ -135,6 +135,28 @@ public class OwnerDAO {
         return null;
     }
     
+    public Owner searchOwner(Object id){
+        try{
+            String sql = "SELECT * FROM owners WHERE owner_id = ? OR full_name LIKE ?";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            statement.setObject(1, id);
+            statement.setObject(2, id + "%");
+            
+            ResultSet rst = statement.executeQuery();
+            
+            if(rst.next()){
+                return new Owner(rst.getInt("owner_id"), rst.getString("full_name"), rst.getString("contact"), rst.getString("address"), rst.getString("email"));
+            }
+            
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return null;
+    }
+    
     public Owner searchByName(String name){
         try{
             String sql = "SELECT * FROM owners WHERE full_name=?";

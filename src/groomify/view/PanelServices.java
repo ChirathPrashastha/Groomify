@@ -238,14 +238,22 @@ public class PanelServices extends javax.swing.JPanel {
         pnlSearchBox.setLayout(new java.awt.BorderLayout());
 
         lblSearchIcon.setBackground(new java.awt.Color(255, 255, 255));
+        lblSearchIcon.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblSearchIcon.setForeground(new java.awt.Color(122, 110, 102));
         lblSearchIcon.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblSearchIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/search_18.png"))); // NOI18N
+        lblSearchIcon.setText("ID or Service");
         lblSearchIcon.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        lblSearchIcon.setPreferredSize(new java.awt.Dimension(40, 40));
+        lblSearchIcon.setPreferredSize(new java.awt.Dimension(110, 40));
         pnlSearchBox.add(lblSearchIcon, java.awt.BorderLayout.LINE_START);
 
         txtSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtSearch.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchKeyReleased(evt);
+            }
+        });
         pnlSearchBox.add(txtSearch, java.awt.BorderLayout.CENTER);
 
         add(pnlSearchBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 100, 500, 40));
@@ -344,6 +352,26 @@ public class PanelServices extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_btnDeleteServiceActionPerformed
+
+    private void searchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchKeyReleased
+        if(txtSearch.getText().isEmpty()){
+            loadTable();
+        }else{
+            String id = txtSearch.getText();
+
+            Service searchResult = serviceController.searchService(id);
+                    
+            if(searchResult != null){
+                DefaultTableModel model = (DefaultTableModel)tblServices.getModel();
+                model.setRowCount(0);
+                        
+                Object[] row = {searchResult.getServiceId(), searchResult.getName(), searchResult.getDescription(), searchResult.getPrice(), searchResult.getStatus()};
+                model.addRow(row);
+            }else{
+                loadTable();
+            }
+        }
+    }//GEN-LAST:event_searchKeyReleased
 
     private void clearFields(){
         txtServiceName.setText("");

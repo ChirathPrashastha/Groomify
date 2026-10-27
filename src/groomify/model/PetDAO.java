@@ -105,6 +105,28 @@ public class PetDAO {
         
         return null;
     }
+    
+    public Pet searchPet(Object id){
+        try{
+            String sql = "SELECT * FROM pets WHERE pet_id=? OR name LIKE ?";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            statement.setObject(1, id);
+            statement.setObject(2, id + "%");
+            
+            ResultSet rst = statement.executeQuery();
+            
+            if(rst.next()){
+                return new Pet(rst.getInt("pet_id"), rst.getString("name"), rst.getString("species"), rst.getString("breed"), rst.getString("coat_type"), rst.getInt("owner_id"));
+            }
+            
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return null;
+    }
         
     public Pet searchPetByName(String name){
         try{

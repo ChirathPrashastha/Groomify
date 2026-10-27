@@ -138,6 +138,94 @@ public class AppointmentDAO {
         return null;
     }
     
+    public ArrayList<Appointment> getScheduledAppointments(){
+        ArrayList<Appointment> appointmentList = new ArrayList<>();
+        
+        try{
+            String sql = "SELECT * FROM appointments WHERE status='SCHEDULED'";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            ResultSet rst = statement.executeQuery();
+            
+            while(rst.next()){
+                appointmentList.add(new Appointment(rst.getInt("appointment_id"), rst.getInt("pet_id"), rst.getDate("date").toLocalDate(), rst.getTime("time").toLocalTime(), rst.getString("status"), rst.getInt("created_by")));
+            }
+            
+            return appointmentList;
+            
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return null;
+    }
+    
+    public Appointment searchAppointment(int id){
+        try{
+            String sql = "SELECT * FROM appointments WHERE appointment_id=?";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, id);
+            
+            ResultSet rst = statement.executeQuery();
+            
+            if(rst.next()){
+                return new Appointment(rst.getInt("appointment_id"), rst.getInt("pet_id"), rst.getDate("date").toLocalDate(), rst.getTime("time").toLocalTime(), rst.getString("status"), rst.getInt("created_by"));
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return null;
+    }
+    
+    public ArrayList<Appointment> getCompletedAppointments(){
+        ArrayList<Appointment> appointmentList = new ArrayList<>();
+        
+        try{
+            String sql = "SELECT * FROM appointments WHERE status='COMPLETED'";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            ResultSet rst = statement.executeQuery();
+            
+            while(rst.next()){
+                appointmentList.add(new Appointment(rst.getInt("appointment_id"), rst.getInt("pet_id"), rst.getDate("date").toLocalDate(), rst.getTime("time").toLocalTime(), rst.getString("status"), rst.getInt("created_by")));
+            }
+            
+            return appointmentList;
+            
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return null;
+    }
+    
+    public ArrayList<Appointment> getCancelledAppointments(){
+        ArrayList<Appointment> appointmentList = new ArrayList<>();
+        
+        try{
+            String sql = "SELECT * FROM appointments WHERE status='CANCELLED'";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            ResultSet rst = statement.executeQuery();
+            
+            while(rst.next()){
+                appointmentList.add(new Appointment(rst.getInt("appointment_id"), rst.getInt("pet_id"), rst.getDate("date").toLocalDate(), rst.getTime("time").toLocalTime(), rst.getString("status"), rst.getInt("created_by")));
+            }
+            
+            return appointmentList;
+            
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return null;
+    }
+    
     public int getLastAppointmentId(){
         try{
             String sql = "SELECT MAX(appointment_id) AS last_id FROM appointments";

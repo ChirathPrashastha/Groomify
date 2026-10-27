@@ -31,6 +31,10 @@ public class AppointmentController {
         return appointmentDAO.deleteAppointment(appId);
     }
     
+    public Appointment searchAppointment(int id){
+        return appointmentDAO.searchAppointment(id);
+    }
+    
     public boolean cancelAppointment(int appId){
         return appointmentDAO.cancelAppointment(appId);
     }
@@ -41,6 +45,18 @@ public class AppointmentController {
     
     public ArrayList<Appointment> getAllAppointments(){
         return appointmentDAO.getAllAppointments();
+    }
+    
+    public ArrayList<Appointment> getScheduledAppointments(){
+        return appointmentDAO.getScheduledAppointments();
+    }
+    
+    public ArrayList<Appointment> getCompletedAppointments(){
+        return appointmentDAO.getCompletedAppointments();
+    }
+    
+    public ArrayList<Appointment> getCancelledAppointments(){
+        return appointmentDAO.getCancelledAppointments();
     }
     
     public int getLastAppointmentId(){

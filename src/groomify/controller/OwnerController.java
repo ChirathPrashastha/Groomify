@@ -32,6 +32,10 @@ public class OwnerController {
         return ownerDAO.deleteOwner(ownerId);
     }
     
+    public Owner searchOwner(Object id){
+        return ownerDAO.searchOwner(id);
+    }
+    
     public ArrayList<Owner> getAllOwners(){
         return ownerDAO.getAllOwners();
     }
