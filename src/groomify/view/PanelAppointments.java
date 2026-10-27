@@ -223,6 +223,7 @@ public class PanelAppointments extends javax.swing.JPanel {
         btnCancelled.setText("Cancelled");
         add(btnCancelled, new org.netbeans.lib.awtextra.AbsoluteConstraints(677, 104, 88, 32));
 
+        tblAppointments.setForeground(new java.awt.Color(43, 35, 32));
         tblAppointments.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
@@ -234,6 +235,12 @@ public class PanelAppointments extends javax.swing.JPanel {
                 "Appointment Id", "Pet ID", "Date", "Time", "Status", "Created  by"
             }
         ));
+        tblAppointments.setFocusable(false);
+        tblAppointments.setGridColor(new java.awt.Color(227, 205, 182));
+        tblAppointments.setRowHeight(34);
+        tblAppointments.setSelectionBackground(new java.awt.Color(245, 233, 220));
+        tblAppointments.setSelectionForeground(new java.awt.Color(43, 35, 32));
+        tblAppointments.setShowHorizontalLines(true);
         tblAppointments.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblAppointmentMouseClicked(evt);
@@ -323,7 +330,6 @@ public class PanelAppointments extends javax.swing.JPanel {
         btnAddAppointment.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         btnAddAppointment.setForeground(new java.awt.Color(43, 35, 32));
         btnAddAppointment.setText("Book appointment");
-        btnAddAppointment.setActionCommand("Book appointment");
         btnAddAppointment.setIconTextGap(10);
         btnAddAppointment.addActionListener(this::btnAddAppointmentActionPerformed);
         pnlAppBox.add(btnAddAppointment, new org.netbeans.lib.awtextra.AbsoluteConstraints(195, 405, 170, 40));
@@ -333,6 +339,7 @@ public class PanelAppointments extends javax.swing.JPanel {
         lblTotal.setText("LKR: ");
         pnlAppBox.add(lblTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(26, 412, -1, -1));
 
+        tblServices.setForeground(new java.awt.Color(43, 35, 32));
         tblServices.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
@@ -344,6 +351,12 @@ public class PanelAppointments extends javax.swing.JPanel {
                 "Service ID", "Service", "Name"
             }
         ));
+        tblServices.setFocusable(false);
+        tblServices.setGridColor(new java.awt.Color(227, 205, 182));
+        tblServices.setRowHeight(34);
+        tblServices.setSelectionBackground(new java.awt.Color(245, 233, 220));
+        tblServices.setSelectionForeground(new java.awt.Color(43, 35, 32));
+        tblServices.setShowHorizontalLines(true);
         tblServices.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblServicesMouseClicked(evt);

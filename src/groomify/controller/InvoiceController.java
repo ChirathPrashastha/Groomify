@@ -38,4 +38,12 @@ public class InvoiceController {
     public boolean markAsPaid(Invoice invoice){
         return invoiceDAO.markAsPaid(invoice);
     }
+    
+    public double getTodaysRevenue(){
+        return invoiceDAO.getTodaysRevenue();
+    }
+    
+    public int getPendingPayemntCount(){
+        return invoiceDAO.getPendingPaymentCount();
+    }
 }

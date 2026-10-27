@@ -156,4 +156,23 @@ public class AppointmentDAO {
         
         return 0;
     }
+    
+    public int getTodaysAppointmentsCount(){
+        try{
+            String sql = "SELECT COUNT(appointment_id) AS app_count FROM appointments WHERE date=CURDATE();";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            ResultSet rst = statement.executeQuery();
+            
+            if(rst.next()){
+                return rst.getInt("app_count");
+            }
+            
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return 0;
+    }
 }

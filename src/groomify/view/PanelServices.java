@@ -84,6 +84,7 @@ public class PanelServices extends javax.swing.JPanel {
         txtSearch = new javax.swing.JTextField();
 
         setBackground(new java.awt.Color(251, 246, 240));
+        setForeground(new java.awt.Color(43, 35, 32));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lblTitle.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -95,8 +96,10 @@ public class PanelServices extends javax.swing.JPanel {
         lblSubTitile.setText("Prices and durations for grooming services");
         add(lblSubTitile, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 56, -1, -1));
 
+        scrollPaneServices.setFocusable(false);
         scrollPaneServices.setPreferredSize(new java.awt.Dimension(500, 500));
 
+        tblServices.setForeground(new java.awt.Color(43, 35, 32));
         tblServices.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
@@ -108,6 +111,12 @@ public class PanelServices extends javax.swing.JPanel {
                 "Service ID", "Service", "Description", "Price", "Status"
             }
         ));
+        tblServices.setFocusable(false);
+        tblServices.setGridColor(new java.awt.Color(227, 205, 182));
+        tblServices.setRowHeight(34);
+        tblServices.setSelectionBackground(new java.awt.Color(245, 233, 220));
+        tblServices.setSelectionForeground(new java.awt.Color(43, 35, 32));
+        tblServices.setShowHorizontalLines(true);
         tblServices.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblServicesMouseClicked(evt);

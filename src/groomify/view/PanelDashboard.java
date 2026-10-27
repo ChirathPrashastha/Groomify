@@ -5,17 +5,35 @@
 package groomify.view;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import groomify.controller.AppointmentController;
+import groomify.controller.InvoiceController;
+import groomify.controller.PetController;
+import groomify.controller.UpNextController;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import groomify.model.UpNext;
 
 /**
  *
  * @author Chirath
  */
 public class PanelDashboard extends javax.swing.JPanel {
+    
+    private AppointmentController appointmentController;
+    private InvoiceController invoiceController;
+    private PetController petController;
+    private UpNextController upNextController;
 
     /**
      * Creates new form PanelDashboard
      */
     public PanelDashboard() {
+        
+        appointmentController = new AppointmentController();
+        invoiceController = new InvoiceController();
+        petController = new PetController();
+        upNextController = new UpNextController();
         
         FlatLightLaf.setup();
         
@@ -25,6 +43,31 @@ public class PanelDashboard extends javax.swing.JPanel {
         pnlStat2.putClientProperty(com.formdev.flatlaf.FlatClientProperties.STYLE, "arc:20");
         pnlStat3.putClientProperty(com.formdev.flatlaf.FlatClientProperties.STYLE, "arc:20");
         pnlStat4.putClientProperty(com.formdev.flatlaf.FlatClientProperties.STYLE, "arc:20");
+        
+        lblTdyAppValue.setText(String.valueOf(appointmentController.getTodaysAppointmentsCount()));
+        
+        lblDate.setText(LocalDate.now().toString());
+        
+        lblTdyRevValue.setText(String.valueOf(invoiceController.getTodaysRevenue()));
+        
+        lblRegPetValue.setText(String.valueOf(petController.getPetCount()));
+        
+        lblPendingPayVal.setText(String.valueOf(invoiceController.getPendingPayemntCount()));
+        
+        loadTable();
+    }
+    
+    private void loadTable(){
+        DefaultTableModel model = (DefaultTableModel)tblUpNext.getModel();
+        
+        model.setRowCount(0);
+        
+        ArrayList<UpNext> dataList = upNextController.getUpNexts();
+        
+        for(UpNext data : dataList){
+            Object[] row = {data.getTime(), data.getPet(), data.getServices(), data.getStatus()};
+            model.addRow(row);
+        }
     }
 
     /**
@@ -164,17 +207,17 @@ public class PanelDashboard extends javax.swing.JPanel {
         tblUpNext.setForeground(new java.awt.Color(43, 35, 32));
         tblUpNext.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"9:00", "Bella", "Done"},
-                {"10:00", "Max", "In progress"},
-                {"11:30", "Luna", "Scheduled"},
-                {"13:00", "Coco", "Scheduled"}
+                {"9:00", "Bella", null, "Done"},
+                {"10:00", "Max", null, "In progress"},
+                {"11:30", "Luna", null, "Scheduled"},
+                {"13:00", "Coco", null, "Scheduled"}
             },
             new String [] {
-                "Time", "Pet & Service", "Status"
+                "Time", "Pet", "Services", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, true, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -191,9 +234,9 @@ public class PanelDashboard extends javax.swing.JPanel {
         tblUpNext.setShowHorizontalLines(true);
         scrollPaneUpNext.setViewportView(tblUpNext);
 
-        pnlUpNext.add(scrollPaneUpNext, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 48, -1, -1));
+        pnlUpNext.add(scrollPaneUpNext, new org.netbeans.lib.awtextra.AbsoluteConstraints(16, 48, 800, -1));
 
-        add(pnlUpNext, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 212, -1, -1));
+        add(pnlUpNext, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 212, 830, -1));
     }// </editor-fold>//GEN-END:initComponents
 
 

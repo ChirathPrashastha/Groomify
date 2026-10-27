@@ -98,6 +98,7 @@ public class PanelOwners extends javax.swing.JPanel {
 
         scrollPaneOwners.setPreferredSize(new java.awt.Dimension(500, 500));
 
+        tblOwners.setForeground(new java.awt.Color(43, 35, 32));
         tblOwners.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
@@ -109,6 +110,12 @@ public class PanelOwners extends javax.swing.JPanel {
                 "owner_id", "Owner", "Contact", "Address", "Email"
             }
         ));
+        tblOwners.setFocusable(false);
+        tblOwners.setGridColor(new java.awt.Color(227, 205, 182));
+        tblOwners.setRowHeight(34);
+        tblOwners.setSelectionBackground(new java.awt.Color(245, 233, 220));
+        tblOwners.setSelectionForeground(new java.awt.Color(43, 35, 32));
+        tblOwners.setShowHorizontalLines(true);
         tblOwners.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblOwnersMouseClicked(evt);

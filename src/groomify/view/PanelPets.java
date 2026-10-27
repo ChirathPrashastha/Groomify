@@ -141,6 +141,7 @@ public class PanelPets extends javax.swing.JPanel {
         btnOthers.setBorder(null);
         add(btnOthers, new org.netbeans.lib.awtextra.AbsoluteConstraints(684, 104, 72, 32));
 
+        tblPets.setForeground(new java.awt.Color(43, 35, 32));
         tblPets.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
@@ -152,6 +153,12 @@ public class PanelPets extends javax.swing.JPanel {
                 "Pet ID", "Pet", "Species", "Breed", "Coat", "Owner"
             }
         ));
+        tblPets.setFocusable(false);
+        tblPets.setGridColor(new java.awt.Color(227, 205, 182));
+        tblPets.setRowHeight(34);
+        tblPets.setSelectionBackground(new java.awt.Color(245, 233, 220));
+        tblPets.setSelectionForeground(new java.awt.Color(43, 35, 32));
+        tblPets.setShowHorizontalLines(true);
         tblPets.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblPetsMouseClicked(evt);

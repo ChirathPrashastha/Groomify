@@ -51,4 +51,8 @@ public class PetController {
     public CustomPetAndOwner getPetAndOwnerNameByPetId(int petId){
         return petDAO.getPetAndOwnerNameByPetId(petId);
     }
+    
+    public int getPetCount(){
+        return petDAO.getPetCount();
+    }
 }

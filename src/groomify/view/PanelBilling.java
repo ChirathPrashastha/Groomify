@@ -93,6 +93,7 @@ public class PanelBilling extends javax.swing.JPanel {
 
         scrollPaneInvoices.setPreferredSize(new java.awt.Dimension(500, 500));
 
+        tblInvoices.setForeground(new java.awt.Color(43, 35, 32));
         tblInvoices.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
@@ -104,6 +105,12 @@ public class PanelBilling extends javax.swing.JPanel {
                 "Invoice", "Appointment", "Total", "Payment method", "Status"
             }
         ));
+        tblInvoices.setFocusable(false);
+        tblInvoices.setGridColor(new java.awt.Color(227, 205, 182));
+        tblInvoices.setRowHeight(34);
+        tblInvoices.setSelectionBackground(new java.awt.Color(245, 233, 220));
+        tblInvoices.setSelectionForeground(new java.awt.Color(43, 35, 32));
+        tblInvoices.setShowHorizontalLines(true);
         tblInvoices.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblInvoiceMouseClicked(evt);
@@ -183,6 +190,12 @@ public class PanelBilling extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblAppServices.setFocusable(false);
+        tblAppServices.setGridColor(new java.awt.Color(227, 205, 182));
+        tblAppServices.setRowHeight(34);
+        tblAppServices.setSelectionBackground(new java.awt.Color(245, 233, 220));
+        tblAppServices.setSelectionForeground(new java.awt.Color(43, 35, 32));
+        tblAppServices.setShowHorizontalLines(true);
         scrollPaneAppServices.setViewportView(tblAppServices);
 
         panelInvoiceBox.add(scrollPaneAppServices, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 280, 230));

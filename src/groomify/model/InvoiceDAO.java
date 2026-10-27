@@ -122,4 +122,44 @@ public class InvoiceDAO {
         
         return false;
     }
+    
+    public double getTodaysRevenue(){
+        try{
+            
+            String sql = "SELECT SUM(total) AS revenue FROM invoices JOIN appointments ON invoices.appointment_id = appointments.appointment_id WHERE appointments.date = CURDATE() AND invoices.status='PAID'";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            ResultSet rst = statement.executeQuery();
+            
+            if(rst.next()){
+                return rst.getDouble("revenue");
+            }
+                    
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return 0.0;
+    }
+    
+    public int getPendingPaymentCount(){
+        try{
+            
+            String sql = "SELECT COUNT(invoice_id) AS pending_count FROM invoices WHERE status='PENDING';";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            ResultSet rst = statement.executeQuery();
+            
+            if(rst.next()){
+                return rst.getInt("pending_count");
+            }
+                    
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return 0;
+    }
 }

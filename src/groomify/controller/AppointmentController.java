@@ -46,4 +46,8 @@ public class AppointmentController {
     public int getLastAppointmentId(){
         return appointmentDAO.getLastAppointmentId();
     }
+    
+    public int getTodaysAppointmentsCount(){
+        return appointmentDAO.getTodaysAppointmentsCount();
+    }
 }

@@ -194,4 +194,24 @@ public class PetDAO {
         
         return null;
     }
+    
+    public int getPetCount(){
+        try{
+            
+            String sql = "SELECT COUNT(pet_id) AS pet_count FROM pets";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            ResultSet rst = statement.executeQuery();
+            
+            if(rst.next()){
+                return rst.getInt("pet_count");
+            }
+            
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return 0;
+    }
 }
