@@ -35,6 +35,14 @@ public class InvoiceController {
         return invoiceDAO.getAllInvoices();
     }
     
+    public ArrayList<Invoice> getPaidInvoices(){
+        return invoiceDAO.getPaidInvoicecs();
+    }
+    
+    public ArrayList<Invoice> getPendingInvoices(){
+        return invoiceDAO.getPendingInvoicecs();
+    }
+    
     public boolean markAsPaid(Invoice invoice){
         return invoiceDAO.markAsPaid(invoice);
     }

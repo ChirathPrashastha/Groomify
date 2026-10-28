@@ -123,6 +123,7 @@ public class PanelPets extends javax.swing.JPanel {
         btnAll.setSelected(true);
         btnAll.setText("All");
         btnAll.setBorder(null);
+        btnAll.addActionListener(this::btnAllActionPerformed);
         add(btnAll, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 104, 56, 32));
 
         btnDogs.setBackground(new java.awt.Color(245, 233, 220));
@@ -131,6 +132,7 @@ public class PanelPets extends javax.swing.JPanel {
         btnDogs.setForeground(new java.awt.Color(141, 91, 58));
         btnDogs.setText("Dogs");
         btnDogs.setBorder(null);
+        btnDogs.addActionListener(this::btnDogsActionPerformed);
         add(btnDogs, new org.netbeans.lib.awtextra.AbsoluteConstraints(524, 104, 72, 32));
 
         btnCats.setBackground(new java.awt.Color(245, 233, 220));
@@ -139,6 +141,7 @@ public class PanelPets extends javax.swing.JPanel {
         btnCats.setForeground(new java.awt.Color(141, 91, 58));
         btnCats.setText("Cats");
         btnCats.setBorder(null);
+        btnCats.addActionListener(this::btnCatsActionPerformed);
         add(btnCats, new org.netbeans.lib.awtextra.AbsoluteConstraints(604, 104, 72, 32));
 
         btnOthers.setBackground(new java.awt.Color(245, 233, 220));
@@ -147,6 +150,7 @@ public class PanelPets extends javax.swing.JPanel {
         btnOthers.setForeground(new java.awt.Color(141, 91, 58));
         btnOthers.setText("Others");
         btnOthers.setBorder(null);
+        btnOthers.addActionListener(this::btnOthersActionPerformed);
         add(btnOthers, new org.netbeans.lib.awtextra.AbsoluteConstraints(684, 104, 72, 32));
 
         tblPets.setForeground(new java.awt.Color(43, 35, 32));
@@ -274,6 +278,69 @@ public class PanelPets extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_searchKeyReleased
 
+    private void btnAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAllActionPerformed
+        if(btnAll.isSelected()){
+            loadTable();
+        }
+    }//GEN-LAST:event_btnAllActionPerformed
+
+    private void btnDogsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDogsActionPerformed
+        if(btnDogs.isSelected()){
+            loadDogs();
+        }
+    }//GEN-LAST:event_btnDogsActionPerformed
+
+    private void btnCatsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCatsActionPerformed
+        if(btnCats.isSelected()){
+            loadCats();
+        }
+    }//GEN-LAST:event_btnCatsActionPerformed
+
+    private void btnOthersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOthersActionPerformed
+        if(btnOthers.isSelected()){
+            loadOtherPets();
+        }
+    }//GEN-LAST:event_btnOthersActionPerformed
+
+    public void loadDogs(){
+        DefaultTableModel model = (DefaultTableModel)tblPets.getModel();
+        
+        model.setRowCount(0);
+        
+        ArrayList<Pet> petList = petController.getDogs();
+        
+        for(Pet pet : petList){
+            Object[] row = {pet.getPetId(), pet.getName(), pet.getSpecies(), pet.getBreed(), pet.getCoatType(), pet.getOwnerId()};
+            model.addRow(row);
+        }
+    }
+    
+    public void loadCats(){
+        DefaultTableModel model = (DefaultTableModel)tblPets.getModel();
+        
+        model.setRowCount(0);
+        
+        ArrayList<Pet> petList = petController.getCats();
+        
+        for(Pet pet : petList){
+            Object[] row = {pet.getPetId(), pet.getName(), pet.getSpecies(), pet.getBreed(), pet.getCoatType(), pet.getOwnerId()};
+            model.addRow(row);
+        }
+    }
+    
+    public void loadOtherPets(){
+        DefaultTableModel model = (DefaultTableModel)tblPets.getModel();
+        
+        model.setRowCount(0);
+        
+        ArrayList<Pet> petList = petController.getOtherPets();
+        
+        for(Pet pet : petList){
+            Object[] row = {pet.getPetId(), pet.getName(), pet.getSpecies(), pet.getBreed(), pet.getCoatType(), pet.getOwnerId()};
+            model.addRow(row);
+        }
+    }
+    
     private void loadTable(){
         DefaultTableModel model = (DefaultTableModel)tblPets.getModel();
         

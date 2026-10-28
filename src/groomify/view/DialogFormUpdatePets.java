@@ -120,7 +120,7 @@ public class DialogFormUpdatePets extends javax.swing.JDialog {
 
         cmbSpecies.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         cmbSpecies.setForeground(new java.awt.Color(122, 110, 102));
-        cmbSpecies.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "DOG", "CAT", "OTHERS" }));
+        cmbSpecies.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "DOG", "CAT", "OTHER" }));
         cmbSpecies.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(227, 205, 182)));
         pnlFormPet.add(cmbSpecies, new org.netbeans.lib.awtextra.AbsoluteConstraints(24, 257, 190, 40));
 

@@ -104,6 +104,56 @@ public class InvoiceDAO {
         return null;
     }
     
+    public ArrayList<Invoice> getPaidInvoicecs(){
+        
+        ArrayList<Invoice> invoiceList = new ArrayList<>();
+        
+        try{
+            
+            String sql = "SELECT * FROM invoices WHERE status='PAID'";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            ResultSet rst = statement.executeQuery();
+            
+            while(rst.next()){
+                invoiceList.add(new Invoice(rst.getInt("invoice_id"), rst.getInt("appointment_id"), rst.getDouble("total"), rst.getString("payment_method"), rst.getString("status")));
+            }
+            
+            return invoiceList;
+                    
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return null;
+    }
+    
+    public ArrayList<Invoice> getPendingInvoicecs(){
+        
+        ArrayList<Invoice> invoiceList = new ArrayList<>();
+        
+        try{
+            
+            String sql = "SELECT * FROM invoices WHERE status='PENDING'";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            ResultSet rst = statement.executeQuery();
+            
+            while(rst.next()){
+                invoiceList.add(new Invoice(rst.getInt("invoice_id"), rst.getInt("appointment_id"), rst.getDouble("total"), rst.getString("payment_method"), rst.getString("status")));
+            }
+            
+            return invoiceList;
+                    
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return null;
+    }
+    
     public boolean markAsPaid(Invoice invoice){
         try{
             

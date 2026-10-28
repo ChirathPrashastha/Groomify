@@ -40,6 +40,18 @@ public class PetController {
         return petDAO.getAllPets();
     }
     
+    public ArrayList<Pet> getDogs(){
+        return petDAO.getDogs();
+    }
+    
+    public ArrayList<Pet> getCats(){
+        return petDAO.getCats();
+    }
+    
+    public ArrayList<Pet> getOtherPets(){
+        return petDAO.getOtherPets();
+    }
+    
     public Pet searchPetByName(String name){
         return petDAO.searchPetByName(name);
     }

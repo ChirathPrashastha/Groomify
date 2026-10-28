@@ -46,8 +46,12 @@ public class PanelBilling extends javax.swing.JPanel {
         btnMarkAsPaid.putClientProperty("FlatLaf.style", "arc: 25");
         btnCash.putClientProperty("FlatLaf.style", "arc: 30");
         btnCard.putClientProperty("FlatLaf.style", "arc: 30");
+        btnAll.putClientProperty("FlatLaf.style", "arc: 30");
+        btnPaid.putClientProperty("FlatLaf.style", "arc: 30");
+        btnPending.putClientProperty("FlatLaf.style", "arc: 30");
         
         loadInvoiceTable();
+        btnAll.setSelected(true);
     }
 
     /**
@@ -60,6 +64,7 @@ public class PanelBilling extends javax.swing.JPanel {
     private void initComponents() {
 
         groupPayMethod = new javax.swing.ButtonGroup();
+        buttonGroupFilters = new javax.swing.ButtonGroup();
         lblTitle = new javax.swing.JLabel();
         lblSubTitile = new javax.swing.JLabel();
         scrollPaneInvoices = new javax.swing.JScrollPane();
@@ -75,9 +80,9 @@ public class PanelBilling extends javax.swing.JPanel {
         lblTotalValue = new javax.swing.JLabel();
         scrollPaneAppServices = new javax.swing.JScrollPane();
         tblAppServices = new javax.swing.JTable();
-        pnlSearchBox = new javax.swing.JPanel();
-        lblSearchIcon = new javax.swing.JLabel();
-        txtSearch = new javax.swing.JTextField();
+        btnAll = new javax.swing.JToggleButton();
+        btnPaid = new javax.swing.JToggleButton();
+        btnPending = new javax.swing.JToggleButton();
 
         setBackground(new java.awt.Color(251, 246, 240));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -118,7 +123,7 @@ public class PanelBilling extends javax.swing.JPanel {
         });
         scrollPaneInvoices.setViewportView(tblInvoices);
 
-        add(scrollPaneInvoices, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 168, -1, 504));
+        add(scrollPaneInvoices, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 168, -1, 504));
 
         panelInvoiceBox.setBackground(new java.awt.Color(255, 255, 255));
         panelInvoiceBox.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -202,22 +207,29 @@ public class PanelBilling extends javax.swing.JPanel {
 
         add(panelInvoiceBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 170, 320, 500));
 
-        pnlSearchBox.setBackground(new java.awt.Color(255, 255, 255));
-        pnlSearchBox.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(227, 205, 182)));
-        pnlSearchBox.setLayout(new java.awt.BorderLayout());
+        btnAll.setBackground(new java.awt.Color(245, 233, 220));
+        buttonGroupFilters.add(btnAll);
+        btnAll.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnAll.setForeground(new java.awt.Color(141, 91, 58));
+        btnAll.setText("All");
+        btnAll.addActionListener(this::btnAllActionPerformed);
+        add(btnAll, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 120, 88, 32));
 
-        lblSearchIcon.setBackground(new java.awt.Color(255, 255, 255));
-        lblSearchIcon.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblSearchIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/groomify/util/img/search_18.png"))); // NOI18N
-        lblSearchIcon.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        lblSearchIcon.setPreferredSize(new java.awt.Dimension(40, 40));
-        pnlSearchBox.add(lblSearchIcon, java.awt.BorderLayout.LINE_START);
+        btnPaid.setBackground(new java.awt.Color(245, 233, 220));
+        buttonGroupFilters.add(btnPaid);
+        btnPaid.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnPaid.setForeground(new java.awt.Color(141, 91, 58));
+        btnPaid.setText("Paid");
+        btnPaid.addActionListener(this::btnPaidActionPerformed);
+        add(btnPaid, new org.netbeans.lib.awtextra.AbsoluteConstraints(128, 120, 92, 32));
 
-        txtSearch.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtSearch.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        pnlSearchBox.add(txtSearch, java.awt.BorderLayout.CENTER);
-
-        add(pnlSearchBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(28, 100, 500, 40));
+        btnPending.setBackground(new java.awt.Color(245, 233, 220));
+        buttonGroupFilters.add(btnPending);
+        btnPending.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnPending.setForeground(new java.awt.Color(141, 91, 58));
+        btnPending.setText("Pending");
+        btnPending.addActionListener(this::btnPendingActionPerformed);
+        add(btnPending, new org.netbeans.lib.awtextra.AbsoluteConstraints(232, 120, 88, 32));
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnMarkAsPaidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMarkAsPaidActionPerformed
@@ -270,12 +282,58 @@ public class PanelBilling extends javax.swing.JPanel {
         loadAppointmentServiceTable();
     }//GEN-LAST:event_tblInvoiceMouseClicked
 
+    private void btnAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAllActionPerformed
+        if(btnAll.isSelected()){
+            loadInvoiceTable();
+            clearFields();
+        }
+    }//GEN-LAST:event_btnAllActionPerformed
+
+    private void btnPaidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaidActionPerformed
+        if(btnPaid.isSelected()){
+            loadPaidInvoices();
+        }
+    }//GEN-LAST:event_btnPaidActionPerformed
+
+    private void btnPendingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPendingActionPerformed
+        if(btnPending.isSelected()){
+            loadPendingInvoices();
+            clearFields();
+        }
+    }//GEN-LAST:event_btnPendingActionPerformed
+
     private void loadInvoiceTable(){
         DefaultTableModel modelInoviceTbl = (DefaultTableModel)tblInvoices.getModel();
         
         modelInoviceTbl.setRowCount(0);
         
         ArrayList<Invoice> invoiceList = invoiceController.getAllInvoices();
+        
+        for(Invoice invoice : invoiceList){
+            Object[] row = {invoice.getInvoiceId(), invoice.getAppointmentId(), invoice.getTotal(), invoice.getPaymentMethod(), invoice.getStatus()};
+            modelInoviceTbl.addRow(row);
+        }
+    }
+    
+    private void loadPaidInvoices(){
+        DefaultTableModel modelInoviceTbl = (DefaultTableModel)tblInvoices.getModel();
+        
+        modelInoviceTbl.setRowCount(0);
+        
+        ArrayList<Invoice> invoiceList = invoiceController.getPaidInvoices();
+        
+        for(Invoice invoice : invoiceList){
+            Object[] row = {invoice.getInvoiceId(), invoice.getAppointmentId(), invoice.getTotal(), invoice.getPaymentMethod(), invoice.getStatus()};
+            modelInoviceTbl.addRow(row);
+        }
+    }
+    
+    private void loadPendingInvoices(){
+        DefaultTableModel modelInoviceTbl = (DefaultTableModel)tblInvoices.getModel();
+        
+        modelInoviceTbl.setRowCount(0);
+        
+        ArrayList<Invoice> invoiceList = invoiceController.getPendingInvoices();
         
         for(Invoice invoice : invoiceList){
             Object[] row = {invoice.getInvoiceId(), invoice.getAppointmentId(), invoice.getTotal(), invoice.getPaymentMethod(), invoice.getStatus()};
@@ -308,24 +366,25 @@ public class PanelBilling extends javax.swing.JPanel {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JToggleButton btnAll;
     private javax.swing.JToggleButton btnCard;
     private javax.swing.JToggleButton btnCash;
     private javax.swing.JButton btnMarkAsPaid;
+    private javax.swing.JToggleButton btnPaid;
+    private javax.swing.JToggleButton btnPending;
+    private javax.swing.ButtonGroup buttonGroupFilters;
     private javax.swing.ButtonGroup groupPayMethod;
     private javax.swing.JLabel lblInvoiceId;
     private javax.swing.JLabel lblPayMethod;
-    private javax.swing.JLabel lblSearchIcon;
     private javax.swing.JLabel lblStatus;
     private javax.swing.JLabel lblSubTitile;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblTot;
     private javax.swing.JLabel lblTotalValue;
     private javax.swing.JPanel panelInvoiceBox;
-    private javax.swing.JPanel pnlSearchBox;
     private javax.swing.JScrollPane scrollPaneAppServices;
     private javax.swing.JScrollPane scrollPaneInvoices;
     private javax.swing.JTable tblAppServices;
     private javax.swing.JTable tblInvoices;
-    private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 }

@@ -106,6 +106,78 @@ public class PetDAO {
         return null;
     }
     
+    public ArrayList<Pet> getDogs(){
+        
+        ArrayList<Pet> petList = new ArrayList<>();
+        
+        try{
+            String sql = "SELECT * FROM pets WHERE species='DOG'";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            ResultSet rst = statement.executeQuery();
+            
+            while (rst.next()) {
+                petList.add(new Pet(rst.getInt("pet_id"), rst.getString("name"), rst.getString("species"), rst.getString("breed"), rst.getString("coat_type"), rst.getInt("owner_id")));
+            }
+            
+            return petList;
+            
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return null;
+    }
+    
+    public ArrayList<Pet> getCats(){
+        
+        ArrayList<Pet> petList = new ArrayList<>();
+        
+        try{
+            String sql = "SELECT * FROM pets WHERE species='CAT'";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            ResultSet rst = statement.executeQuery();
+            
+            while (rst.next()) {
+                petList.add(new Pet(rst.getInt("pet_id"), rst.getString("name"), rst.getString("species"), rst.getString("breed"), rst.getString("coat_type"), rst.getInt("owner_id")));
+            }
+            
+            return petList;
+            
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return null;
+    }
+    
+    public ArrayList<Pet> getOtherPets(){
+        
+        ArrayList<Pet> petList = new ArrayList<>();
+        
+        try{
+            String sql = "SELECT * FROM pets WHERE species='OTHER'";
+            
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            ResultSet rst = statement.executeQuery();
+            
+            while (rst.next()) {
+                petList.add(new Pet(rst.getInt("pet_id"), rst.getString("name"), rst.getString("species"), rst.getString("breed"), rst.getString("coat_type"), rst.getInt("owner_id")));
+            }
+            
+            return petList;
+            
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+        return null;
+    }
+    
     public Pet searchPet(Object id){
         try{
             String sql = "SELECT * FROM pets WHERE pet_id=? OR name LIKE ?";
