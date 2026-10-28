@@ -5,6 +5,7 @@
 package groomify.view;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import exceptions.EmptyFieldException;
 import groomify.controller.UserController;
 import groomify.model.User;
 import javax.swing.ImageIcon;
@@ -279,31 +280,38 @@ public class FrameLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        if(txtUsername.getText().isEmpty() || String.valueOf(txtPassword.getPassword()).isEmpty()){
-            lblError.setText("Please fill the fields...");
+
+        try{
+            if(txtUsername.getText().isEmpty() || String.valueOf(txtPassword.getPassword()).isEmpty()){
+                throw new EmptyFieldException();
             
-        }else{
-            User user = userController.checkCredentials(txtUsername.getText(), String.valueOf(txtPassword.getPassword()));
-            
-            if(user != null){
-                String role = user.getRole();
-                
-                if(role.equals("ADMIN")){
-                    FrameDashboard dashboard = new FrameDashboard(user);
-                    dashboard.setVisible(true);
-                    this.dispose();
-                }else if(role.equals("RECEPTIONIST")){
-                    FrameDashboard dashboard = new FrameDashboard(user);
-                    dashboard.setVisible(true);
-                    this.dispose();
-                }
             }else{
-                lblError.setText("Invalid username or password!");
+                User user = userController.checkCredentials(txtUsername.getText(), String.valueOf(txtPassword.getPassword()));
+            
+                if(user != null){
+                    String role = user.getRole();
                 
-                txtUsername.setText("");
-                txtPassword.setText("");
+                    if(role.equals("ADMIN")){
+                        FrameDashboard dashboard = new FrameDashboard(user);
+                        dashboard.setVisible(true);
+                        this.dispose();
+                    }else if(role.equals("RECEPTIONIST")){
+                        FrameDashboard dashboard = new FrameDashboard(user);
+                        dashboard.setVisible(true);
+                        this.dispose();
+                    }
+                }else{
+                    lblError.setText("Invalid username or password!");
+                
+                    txtUsername.setText("");
+                    txtPassword.setText("");
+                }
             }
+        }catch(EmptyFieldException ex){
+            lblError.setText(ex.getMessage());
         }
+        
+
     }//GEN-LAST:event_btnLoginActionPerformed
 
     /**
