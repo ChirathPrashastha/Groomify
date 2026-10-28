@@ -8,6 +8,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.FlatLightLaf;
 import groomify.controller.AppointmentServiceController;
 import groomify.controller.InvoiceController;
+import groomify.controller.InvoiceReportController;
 import groomify.controller.ServiceController;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
@@ -27,6 +28,7 @@ public class PanelBilling extends javax.swing.JPanel {
     private ServiceController serviceController;
     private Invoice selectedInvoice;
     private DefaultTableModel modelAppServiceTbl;
+    private InvoiceReportController reportController;
 
     /**
      * Creates new form PanelBilling
@@ -36,6 +38,7 @@ public class PanelBilling extends javax.swing.JPanel {
         invoiceController = new InvoiceController();
         appointmentServiceController = new AppointmentServiceController();
         serviceController = new ServiceController();
+        reportController = new InvoiceReportController();
         
         FlatLightLaf.setup();
         
@@ -251,6 +254,9 @@ public class PanelBilling extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(null, "Payment saved successfully!", "Information", JOptionPane.INFORMATION_MESSAGE);
                 
                 loadInvoiceTable();
+                
+                reportController.generateBill(selectedInvoice.getInvoiceId());
+                
                 clearFields();
             }else{
                 JOptionPane.showMessageDialog(null, "Failed to save the payment", "Information", JOptionPane.ERROR_MESSAGE);
